@@ -1,7 +1,7 @@
 [![version](https://img.shields.io/badge/Version-0.0.1-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.0.1)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
 [![Build Status](https://travis-ci.org/SimonDevelop/array-organize.svg?branch=master)](https://travis-ci.org/SimonDevelop/array-organize)
-[![GitHub license](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/SimonDevelop/array-organize/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/SimonDevelop/array-organize/blob/master/LICENSE)
 # array-organize
 Php library for easy sorting of data, generate html table and more.
 
