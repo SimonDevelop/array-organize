@@ -1,0 +1,35 @@
+{
+  "name": "simondevelop/array-organize",
+  "description": "Php library for easy sorting of data, generate html table and more.",
+  "type": "library",
+  "keywords": [
+    "array",
+    "sort",
+    "table",
+    "pagination"
+  ],
+  "homepage": "https://github.com/SimonDevelop/array-organize",
+  "license": "BSD 3-clause",
+  "authors": [
+    {
+      "name": "SimonDevelop",
+      "email": "contact@simon-micheneau.fr"
+    }
+  ],
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "SimonDevelop\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.6"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.1",
+    "phpunit/phpunit": "~5.7.0"
+  },
+  "scripts": {
+    "test": "phpcs -s && phpunit --colors"
+  }
+}
