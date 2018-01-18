@@ -6,7 +6,7 @@
 Php library for easy sorting of data, generate html table and more.
 
 ```bash
-composer require SimonDevelop/array-organize
+composer require simondevelop/array-organize
 ```
 
 ## Example
