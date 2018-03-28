@@ -117,6 +117,9 @@ class ArrayOrganize
                 if (!isset($classDisabledA)) {
                     $classDisabledA = "";
                 }
+            } else {
+                $classDisabledLi = "";
+                $classDisabledA = "";
             }
             if (isset($pagination["cssClass"]["active"]) && is_array($pagination["cssClass"]["active"])) {
                 foreach ($pagination["cssClass"]["active"] as $k => $v) {
@@ -133,6 +136,9 @@ class ArrayOrganize
                 if (!isset($classActiveA)) {
                     $classActiveA = "";
                 }
+            } else {
+                $classActiveLi = "";
+                $classActiveA = "";
             }
         } else {
             $classUl = "";
@@ -166,12 +172,12 @@ class ArrayOrganize
             }
 
             if ($this->page > 1) {
-                $html .= "<li class=\"".$classLi."\" >
-                            <a class=\"".$classA."\"  href=\"".$urlPrevious."\">".$previous."</a>
+                $html .= "<li class=\"".$classLi."\">
+                            <a class=\"".$classA."\" href=\"".$urlPrevious."\">".$previous."</a>
                           </li>";
             } else {
-                $html .= "<li class=\"".$classLi." ".$classDisabledLi."\" >
-                            <a class=\"".$classA." ".$classDisabledA."\">".$previous."</a>
+                $html .= "<li class=\"".trim($classLi." ".$classDisabledLi)."\">
+                            <a class=\"".trim($classA." ".$classDisabledA)."\">".$previous."</a>
                           </li>";
             }
 
@@ -181,23 +187,23 @@ class ArrayOrganize
             }
             for ($i=1; $i <= $pages; $i++) {
                 if ($i == $this->page) {
-                    $html .= "<li class=\"".$classLi." ".$classDisabledLi."\" >
-                                <a class=\"".$classA." ".$classDisabledA."\">".$i."</a>
+                    $html .= "<li class=\"".trim($classLi." ".$classActiveLi)."\">
+                                <a class=\"".trim($classA." ".$classActiveA)."\">".$i."</a>
                               </li>";
                 } else {
-                    $html .= "<li class=\"".$classLi."\" >
-                                <a class=\"".$classA."\"  href=\"".str_replace("{}", $i, $this->url)."\">".$i."</a>
+                    $html .= "<li class=\"".$classLi."\">
+                                <a class=\"".$classA."\" href=\"".str_replace("{}", $i, $this->url)."\">".$i."</a>
                               </li>";
                 }
             }
 
             if ($this->page < (count($this->data)/$this->byPage)) {
-                $html .= "<li class=\"".$classLi."\" >
-                            <a class=\"".$classA."\"  href=\"".$urlNext."\">".$next."</a>
+                $html .= "<li class=\"".$classLi."\">
+                            <a class=\"".$classA."\" href=\"".$urlNext."\">".$next."</a>
                           </li>";
             } else {
-                $html .= "<li class=\"".$classLi." ".$classDisabledLi."\" >
-                            <a class=\"".$classA." ".$classDisabledA."\">".$next."</a>
+                $html .= "<li class=\"".trim($classLi." ".$classDisabledLi)."\">
+                            <a class=\"".trim($classA." ".$classDisabledA)."\">".$next."</a>
                           </li>";
             }
             $html .= "</ul>";
