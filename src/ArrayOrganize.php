@@ -282,7 +282,7 @@ class ArrayOrganize
                     }
                 }
 
-                if ($this->page < (count($this->data)/$this->byPage)) {
+                if ($this->page < (count($this->data)/$this->byPage) && isset($next)) {
                     $html .= "<li><a href=\"".$urlNext."\">".$next."</a></li>";
                 }
                 $html .= "</ul>";
@@ -345,7 +345,7 @@ class ArrayOrganize
                         }
                     }
 
-                    if ($this->page < (count($this->data)/$this->byPage)) {
+                    if ($this->page < (count($this->data)/$this->byPage) && isset($next)) {
                         $html .= "<li><a href=\"".$urlNext."\">".$next."</a></li>";
                     }
                     $html .= "</ul>";
@@ -365,12 +365,14 @@ class ArrayOrganize
     }
 
     /**
-     * @param array Data
+     * @param array $data
+     * @return array data
      */
     public function setData($data)
     {
         if (is_array($data)) {
             $this->data = $data;
+            return $this->data;
         } else {
             throw new \Exception('Unable to "setData": The parameter must be an array');
         }
@@ -385,19 +387,21 @@ class ArrayOrganize
     }
 
     /**
-     * @param int Number data by page
+     * @param int $byPage Number data by page
+     * @return int byPage Number data by page
      */
     public function setByPage($byPage)
     {
         if (is_int($byPage) && $byPage >= 1) {
             $this->byPage = $byPage;
+            return $this->byPage;
         } else {
             throw new \Exception('Unable to "setByPage": The parameter must be an integer and greater than 0');
         }
     }
 
     /**
-     * @return int Current number page
+     * @return int page Current number page
      */
     public function getPage()
     {
@@ -405,12 +409,14 @@ class ArrayOrganize
     }
 
     /**
-     * @param int Current number page
+     * @param int $page Current number page
+     * @return int page Current number page
      */
     public function setPage($page)
     {
         if (is_int($page) && $page >= 1) {
             $this->page = $page;
+            return $this->page;
         } else {
             throw new \Exception('Unable to "setPage": The parameter must be an integer and greater than 0');
         }
@@ -433,12 +439,14 @@ class ArrayOrganize
     }
 
     /**
-     * @param string Default language
+     * @param string $lang Default language
+     * @return string lang Default language
      */
     public function setLang($lang)
     {
         if (is_string($lang) && array_key_exists($lang, $this->pages)) {
             $this->lang = $lang;
+            return $this->lang;
         } else {
             throw new \Exception('Unable to "setLang": The parameter must be an string and exist in languages supported
             (example: "en" or "fr")');

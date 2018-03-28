@@ -1,6 +1,6 @@
 <?php
 
-namespace SimonDevelop\ArrayOrganize\Test;
+namespace SimonDevelop\Test;
 
 use \PHPUnit\Framework\TestCase;
 use \SimonDevelop\ArrayOrganize;
@@ -106,12 +106,12 @@ class ArrayOrganizeTest extends TestCase
 
         $cssClass = ['table', 'table-striped'];
 
-        $this->assertContains('<table class="table table-striped">', (string)$ArrayOrganize->generateTable($cssClass));
+        $this->assertContains('<table class="table table-striped">', $ArrayOrganize->generateTable($cssClass));
 
-        $this->assertContains('<tr><th>id</th><th>name</th></tr>', (string)$ArrayOrganize->generateTable($cssClass));
-        $this->assertContains('<tr><td>2</td><td>test4</td></tr>', (string)$ArrayOrganize->generateTable($cssClass));
-        $this->assertContains('<tr><td>1</td><td>test5</td></tr>', (string)$ArrayOrganize->generateTable($cssClass));
-        $this->assertContains('<tr><td>3</td><td>test3</td></tr>', (string)$ArrayOrganize->generateTable($cssClass));
+        $this->assertContains('<tr><th>id</th><th>name</th></tr>', $ArrayOrganize->generateTable($cssClass));
+        $this->assertContains('<tr><td>2</td><td>test4</td></tr>', $ArrayOrganize->generateTable($cssClass));
+        $this->assertContains('<tr><td>1</td><td>test5</td></tr>', $ArrayOrganize->generateTable($cssClass));
+        $this->assertContains('<tr><td>3</td><td>test3</td></tr>', $ArrayOrganize->generateTable($cssClass));
     }
 
     /**

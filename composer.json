@@ -19,7 +19,8 @@
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "SimonDevelop\\": "src/"
+      "SimonDevelop\\": "src/",
+      "SimonDevelop\\Test\\": "tests/"
     }
   },
   "require": {
@@ -27,9 +28,22 @@
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.1",
-    "phpunit/phpunit": "~5.7.0"
+    "phpunit/phpunit": "~5.7.0",
+    "phpstan/phpstan": "^0.9.2"
   },
   "scripts": {
-    "test": "phpcs -s && phpunit --colors"
+    "phpcs": "phpcs -s",
+    "phpstan-src": "phpstan analyse -l 5 src",
+    "phpstan-tests": "phpstan analyse -l 5 tests",
+    "phpstan": [
+      "@phpstan-src",
+      "@phpstan-tests"
+    ],
+    "phpunit": "phpunit --colors",
+    "test": [
+      "@phpunit",
+      "@phpcs",
+      "@phpstan"
+    ]
   }
 }
