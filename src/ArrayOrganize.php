@@ -80,6 +80,52 @@ class ArrayOrganize
     }
 
     /**
+     * @param array $pagination params for construct pagination
+     * @return string Return html pagination
+     */
+    private function generatePagination(array $pagination)
+    {
+        $html = "";
+        if (isset($pagination["cssClass"]) && is_array($pagination["cssClass"])) {
+            $class = implode(" ", $pagination["cssClass"]);
+        } else {
+            $class = "";
+        }
+
+        if ($this->byPage != null && $this->byPage < count($this->data)) {
+            $html .= "<ul class=\"".$class."\">";
+
+            if ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
+                $urlPrevious = str_replace("{}", $this->page-1, $this->url);
+                $urlNext = str_replace("{}", $this->page+1, $this->url);
+            } else {
+                $urlPrevious = "#";
+                $urlNext = "#";
+            }
+
+            if ($this->byPage > 1) {
+                if (isset($pagination["lang"]) && isset($this->pages[$pagination["lang"]])) {
+                    $previous = $this->pages[$pagination["lang"]][0];
+                    $next = $this->pages[$pagination["lang"]][1];
+                } else {
+                    $previous = $this->pages["en"][0];
+                    $next = $this->pages["en"][1];
+                }
+
+                if ($this->page > 1) {
+                    $html .= "<li><a href=\"".$urlPrevious."\">".$previous."</a></li>";
+                }
+            }
+
+            if ($this->page < (count($this->data)/$this->byPage) && isset($next)) {
+                $html .= "<li><a href=\"".$urlNext."\">".$next."</a></li>";
+            }
+            $html .= "</ul>";
+        }
+        return $html;
+    }
+
+    /**
      * @param string $on Column to order
      * @param string $order Meaning order by 'ASC' or 'DESC' (optionnal)
      * @return bool Return true if data sorted | Return false if data array empty or not a array
@@ -206,7 +252,7 @@ class ArrayOrganize
      * @param array $cssClass Array css class for table balise (optionnal)
      * @return string Return table html code with css class or not and data by page limit
      */
-    public function generateTable(array $cssClass = [], array $pagination = ["lang" => "en"])
+    public function generateTable(array $cssClass = [], array $pagination = [])
     {
         if (!empty($cssClass)) {
             $class_table = implode(" ", $cssClass);
@@ -245,43 +291,10 @@ class ArrayOrganize
         }
         $html = "";
 
-        if (isset($pagination["position"]) && ($pagination["position"] == "top" || $pagination["position"] == "full")) {
-            if (isset($pagination["cssClass"]) && is_array($pagination["cssClass"])) {
-                $class = implode(" ", $pagination["cssClass"]);
-            } else {
-                $class = "";
-            }
-
-            if ($this->byPage != null && $this->byPage < count($this->data)) {
-                $html .= "<ul class=\"".$class."\">";
-
-                if ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
-                    $urlPrevious = str_replace("{}", $this->page-1, $this->url);
-                    $urlNext = str_replace("{}", $this->page+1, $this->url);
-                } else {
-                    $urlPrevious = "#";
-                    $urlNext = "#";
-                }
-
-                if ($this->byPage > 1) {
-                    if (isset($pagination["lang"]) && isset($this->pages[$pagination["lang"]])) {
-                        $previous = $this->pages[$pagination["lang"]][0];
-                        $next = $this->pages[$pagination["lang"]][1];
-                    } else {
-                        $previous = $this->pages["en"][0];
-                        $next = $this->pages["en"][1];
-                    }
-
-                    if ($this->page > 1) {
-                        $html .= "<li><a href=\"".$urlPrevious."\">".$previous."</a></li>";
-                    }
-                }
-
-                if ($this->page < (count($this->data)/$this->byPage) && isset($next)) {
-                    $html .= "<li><a href=\"".$urlNext."\">".$next."</a></li>";
-                }
-                $html .= "</ul>";
-            }
+        // Pagination TOP or FULL
+        if (isset($pagination["position"])
+        && ($pagination["position"] == "top" || $pagination["position"] == "full")) {
+            $html .= $this->generatePagination($pagination);
         }
 
         $html .= "<table class=\"".$class_table."\">
@@ -307,45 +320,10 @@ class ArrayOrganize
         $html .= "</tbody>
             </table>";
 
-        if (isset($pagination["position"])) {
-            if ($pagination["position"] == "bottom" || $pagination["position"] == "full") {
-                if (isset($pagination["cssClass"]) && is_array($pagination["cssClass"])) {
-                    $class = implode(" ", $pagination["cssClass"]);
-                } else {
-                    $class = "";
-                }
-
-                if ($this->byPage != null && $this->byPage < count($this->data)) {
-                    $html .= "<ul class=\"".$class."\">";
-
-                    if ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
-                        $urlPrevious = str_replace("{}", $this->page-1, $this->url);
-                        $urlNext = str_replace("{}", $this->page+1, $this->url);
-                    } else {
-                        $urlPrevious = "#";
-                        $urlNext = "#";
-                    }
-
-                    if ($this->byPage > 1) {
-                        if (isset($pagination["lang"]) && isset($this->pages[$pagination["lang"]])) {
-                            $previous = $this->pages[$pagination["lang"]][0];
-                            $next = $this->pages[$pagination["lang"]][1];
-                        } else {
-                            $previous = $this->pages["en"][0];
-                            $next = $this->pages["en"][1];
-                        }
-
-                        if ($this->page > 1) {
-                            $html .= "<li><a href=\"".$urlPrevious."\">".$previous."</a></li>";
-                        }
-                    }
-
-                    if ($this->page < (count($this->data)/$this->byPage) && isset($next)) {
-                        $html .= "<li><a href=\"".$urlNext."\">".$next."</a></li>";
-                    }
-                    $html .= "</ul>";
-                }
-            }
+        // Pagination BOTTOM or FULL
+        if (isset($pagination["position"])
+        && ($pagination["position"] == "bottom" || $pagination["position"] == "full")) {
+            $html .= $this->generatePagination($pagination);
         }
 
         return $html;
