@@ -56,31 +56,26 @@ class ArrayOrganize
      * @param int $byPage Number limit for pagination (optionnal)
      * @param int $page Current number page for pagination (optionnal)
      */
-    public function __construct($data = [], $byPage = 20, $page = 1, $lang = "en")
+    public function __construct(array $data = [], int $byPage = 20, int $page = 1, string $lang = "en")
     {
-        if (is_array($data)) {
-            $this->data = $data;
-        } else {
-            throw new \Exception('Unable build: The first parameter must be an array');
-        }
+        $this->data = $data;
 
         if (is_int($byPage) && $byPage >= 1) {
             $this->byPage = $byPage;
         } else {
-            throw new \Exception('Unable build: The second parameter must be an integer and greater than 0');
+            throw new \Exception('Unable build: Argument $byPage must be an integer and greater than 0');
         }
 
         if (is_int(intval($page)) && intval($page) >= 1) {
             $this->page = $page;
         } else {
-            throw new \Exception('Unable build: The third parameter must be an integer and greater than 0');
+            throw new \Exception('Unable build: Argument $page must be an integer and greater than 0');
         }
 
         if (is_string($lang) && array_key_exists($lang, $this->pages)) {
             $this->lang = $lang;
         } else {
-            throw new \Exception('Unable build: The fourth parameter must be an string and exist in languages supported
-            (example: "en" or "fr")');
+            throw new \Exception('Unable build: Argument $lang must be an string and exist in languages supported');
         }
     }
 
@@ -89,7 +84,7 @@ class ArrayOrganize
      * @param string $order Meaning order by 'ASC' or 'DESC' (optionnal)
      * @return bool Return true if data sorted | Return false if data array empty or not a array
      */
-    public function dataSort($on, $order = 'ASC')
+    public function dataSort(string $on, string $order = 'ASC')
     {
         if (!empty($this->data)) {
             $new_array = [];
@@ -137,7 +132,7 @@ class ArrayOrganize
      * @param array $columns
      * @return bool Return true if data column(s) filtered | Return false if not filtered
      */
-    public function dataColumnFilter($action = "skip", $columns = [])
+    public function dataColumnFilter(string $action = "skip", array $columns = [])
     {
         if (!empty($this->data)) {
             if ($action === "skip" || $action === "keep") {
@@ -179,7 +174,7 @@ class ArrayOrganize
      * @param array $columns
      * @return bool Return true if data filtered | Return false if not filtered
      */
-    public function dataFilter($columns = [])
+    public function dataFilter(array $columns = [])
     {
         if (!empty($this->data)) {
             if (is_array($columns)) {
@@ -211,7 +206,7 @@ class ArrayOrganize
      * @param array $cssClass Array css class for table balise (optionnal)
      * @return string Return table html code with css class or not and data by page limit
      */
-    public function generateTable($cssClass = [], $pagination = ["lang" => "en"])
+    public function generateTable(array $cssClass = [], array $pagination = ["lang" => "en"])
     {
         if (!empty($cssClass)) {
             $class_table = implode(" ", $cssClass);
@@ -368,14 +363,10 @@ class ArrayOrganize
      * @param array $data
      * @return array data
      */
-    public function setData($data)
+    public function setData(array $data)
     {
-        if (is_array($data)) {
-            $this->data = $data;
-            return $this->data;
-        } else {
-            throw new \Exception('Unable to "setData": The parameter must be an array');
-        }
+        $this->data = $data;
+        return $this->data;
     }
 
     /**
@@ -390,13 +381,13 @@ class ArrayOrganize
      * @param int $byPage Number data by page
      * @return int byPage Number data by page
      */
-    public function setByPage($byPage)
+    public function setByPage(int $byPage)
     {
         if (is_int($byPage) && $byPage >= 1) {
             $this->byPage = $byPage;
             return $this->byPage;
         } else {
-            throw new \Exception('Unable to "setByPage": The parameter must be an integer and greater than 0');
+            throw new \Exception('Unable to "setByPage": Argument must be an integer and greater than 0');
         }
     }
 
@@ -412,13 +403,13 @@ class ArrayOrganize
      * @param int $page Current number page
      * @return int page Current number page
      */
-    public function setPage($page)
+    public function setPage(int $page)
     {
         if (is_int($page) && $page >= 1) {
             $this->page = $page;
             return $this->page;
         } else {
-            throw new \Exception('Unable to "setPage": The parameter must be an integer and greater than 0');
+            throw new \Exception('Unable to "setPage": Argument must be an integer and greater than 0');
         }
     }
 
@@ -442,14 +433,13 @@ class ArrayOrganize
      * @param string $lang Default language
      * @return string lang Default language
      */
-    public function setLang($lang)
+    public function setLang(string $lang)
     {
         if (is_string($lang) && array_key_exists($lang, $this->pages)) {
             $this->lang = $lang;
             return $this->lang;
         } else {
-            throw new \Exception('Unable to "setLang": The parameter must be an string and exist in languages supported
-            (example: "en" or "fr")');
+            throw new \Exception('Unable build: Argument must be an string and exist in languages supported');
         }
     }
 }
