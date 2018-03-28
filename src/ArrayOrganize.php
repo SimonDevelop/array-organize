@@ -87,13 +87,67 @@ class ArrayOrganize
     {
         $html = "";
         if (isset($pagination["cssClass"]) && is_array($pagination["cssClass"])) {
-            $class = implode(" ", $pagination["cssClass"]);
+            if (isset($pagination["cssClass"]["ul"]) && is_string($pagination["cssClass"]["ul"])) {
+                $classUl = trim($pagination["cssClass"]["ul"]);
+            } else {
+                $classUl = "";
+            }
+            if (isset($pagination["cssClass"]["li"]) && is_string($pagination["cssClass"]["li"])) {
+                $classLi = trim($pagination["cssClass"]["li"]);
+            } else {
+                $classLi = "";
+            }
+            if (isset($pagination["cssClass"]["a"]) && is_string($pagination["cssClass"]["a"])) {
+                $classA = trim($pagination["cssClass"]["a"]);
+            } else {
+                $classA = "";
+            }
+            if (isset($pagination["cssClass"]["disabled"]) && is_array($pagination["cssClass"]["disabled"])) {
+                foreach ($pagination["cssClass"]["disabled"] as $k => $v) {
+                    if ($k == "li") {
+                        $classDisabledLi = $v;
+                    }
+                    if ($k == "a") {
+                        $classDisabledA = $v;
+                    }
+                }
+                if (!isset($classDisabledLi)) {
+                    $classDisabledLi = "";
+                }
+                if (!isset($classDisabledA)) {
+                    $classDisabledA = "";
+                }
+            }
+            if (isset($pagination["cssClass"]["active"]) && is_array($pagination["cssClass"]["active"])) {
+                foreach ($pagination["cssClass"]["active"] as $k => $v) {
+                    if ($k == "li") {
+                        $classActiveLi = $v;
+                    }
+                    if ($k == "a") {
+                        $classActiveA = $v;
+                    }
+                }
+                if (!isset($classActiveLi)) {
+                    $classActiveLi = "";
+                }
+                if (!isset($classActiveA)) {
+                    $classActiveA = "";
+                }
+            }
         } else {
-            $class = "";
+            $classUl = "";
+            $classLi = "";
+            $classA = "";
+
+            $classDisabledLi = "";
+            $classDisabledA = "";
+
+            $classActiveLi = "";
+            $classActiveA = "";
         }
 
         if ($this->byPage != null && $this->byPage < count($this->data)) {
-            $html .= "<ul class=\"".$class."\">";
+            $html .= "<ul class=\"".$classUl."\">";
 
             if ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
                 $urlPrevious = str_replace("{}", $this->page-1, $this->url);
@@ -103,22 +157,48 @@ class ArrayOrganize
                 $urlNext = "#";
             }
 
-            if ($this->byPage > 1) {
-                if (isset($pagination["lang"]) && isset($this->pages[$pagination["lang"]])) {
-                    $previous = $this->pages[$pagination["lang"]][0];
-                    $next = $this->pages[$pagination["lang"]][1];
-                } else {
-                    $previous = $this->pages["en"][0];
-                    $next = $this->pages["en"][1];
-                }
+            if (isset($pagination["lang"]) && isset($this->pages[$pagination["lang"]])) {
+                $previous = $this->pages[$pagination["lang"]][0];
+                $next = $this->pages[$pagination["lang"]][1];
+            } else {
+                $previous = $this->pages["en"][0];
+                $next = $this->pages["en"][1];
+            }
 
-                if ($this->page > 1) {
-                    $html .= "<li><a href=\"".$urlPrevious."\">".$previous."</a></li>";
+            if ($this->page > 1) {
+                $html .= "<li class=\"".$classLi."\" >
+                            <a class=\"".$classA."\"  href=\"".$urlPrevious."\">".$previous."</a>
+                          </li>";
+            } else {
+                $html .= "<li class=\"".$classLi." ".$classDisabledLi."\" >
+                            <a class=\"".$classA." ".$classDisabledA."\">".$previous."</a>
+                          </li>";
+            }
+
+            $pages = count($this->data)/$this->byPage;
+            if (is_float($pages)) {
+                $pages = intval($pages)+1;
+            }
+            for ($i=1; $i <= $pages; $i++) {
+                if ($i == $this->page) {
+                    $html .= "<li class=\"".$classLi." ".$classDisabledLi."\" >
+                                <a class=\"".$classA." ".$classDisabledA."\">".$i."</a>
+                              </li>";
+                } else {
+                    $html .= "<li class=\"".$classLi."\" >
+                                <a class=\"".$classA."\"  href=\"".str_replace("{}", $i, $this->url)."\">".$i."</a>
+                              </li>";
                 }
             }
 
-            if ($this->page < (count($this->data)/$this->byPage) && isset($next)) {
-                $html .= "<li><a href=\"".$urlNext."\">".$next."</a></li>";
+            if ($this->page < (count($this->data)/$this->byPage)) {
+                $html .= "<li class=\"".$classLi."\" >
+                            <a class=\"".$classA."\"  href=\"".$urlNext."\">".$next."</a>
+                          </li>";
+            } else {
+                $html .= "<li class=\"".$classLi." ".$classDisabledLi."\" >
+                            <a class=\"".$classA." ".$classDisabledA."\">".$next."</a>
+                          </li>";
             }
             $html .= "</ul>";
         }

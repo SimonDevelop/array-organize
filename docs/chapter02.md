@@ -33,8 +33,18 @@ $cssClass = ['table', 'table-striped'];
 // Settings to pager buttom with lang and url pagination
 $pager = [
   "lang" => "fr", // Language for buttons / Default "en"
-  "position" => "bottom", // Position of buttons
-  "cssClass" => ["pager"], // Css class
+  "position" => "bottom", // Position of pagination
+  "cssClass" => [ // Css class for pagination
+    "ul" => "pagination",
+    "li" => "page-item",
+    "a" => "page-link",
+    "disabled" => [ // Css class for disabled style (<li> and <a> only supported)
+      "li" => "disabled"
+    ],
+    "active" => [ // Css class for active style (<li> and <a> only supported)
+      "li" => "active"
+    ]
+  ],
   "url" => "index.php?p={}" // Url links for buttons (take into account your $page)
 ];
 
