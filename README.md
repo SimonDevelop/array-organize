@@ -1,5 +1,5 @@
-[![version](https://img.shields.io/badge/Version-0.0.1-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.0.1)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
+[![version](https://img.shields.io/badge/Version-0.0.2-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.0.2)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg)](https://php.net/)
 [![Build Status](https://travis-ci.org/SimonDevelop/array-organize.svg?branch=master)](https://travis-ci.org/SimonDevelop/array-organize)
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/SimonDevelop/array-organize/blob/master/LICENSE)
 # array-organize
@@ -26,7 +26,8 @@ $data = [
   ["id" => 4, "name" => "example 6"],
   ["id" => 7, "name" => "example 6"],
   ["id" => 8, "name" => "example 7"],
-  ["id" => 9, "name" => "example 7"]
+  ["id" => 9, "name" => "example 7"],
+  ["id" => 10, "name" => "example 5"]
 ];
 
 if (isset($_GET['p'])) {
@@ -42,15 +43,25 @@ $obj = new ArrayOrganize($data, 3, $page);
 $obj->dataSort("id", "ASC");
 
 // Filter data
-$obj->dataFilter(["name" => "example 5"]);
+// $obj->dataFilter(["name" => "example 5"]);
 
-// Css class for the table balise (example with bootstrap 3)
+// Css class for the table balise (example with bootstrap 4)
 $cssClass = ['table', 'table-striped'];
 
-// Settings to pager buttom
+// Settings of pagination
 $pager = [
   "position" => "bottom",
-  "cssClass" => ["pager"],
+  "cssClass" => [
+    "ul" => "pagination",
+    "li" => "page-item",
+    "a" => "page-link",
+    "disabled" => [
+      "li" => "disabled"
+    ],
+    "active" => [
+      "li" => "active"
+    ]
+  ],
   "url" => "index.php?p={}"
 ];
 
@@ -61,8 +72,8 @@ $pager = [
   <head>
     <meta charset="utf-8">
     <title>ArrayOrganize</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
   <body>
     <div class="container">

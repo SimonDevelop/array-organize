@@ -1,6 +1,6 @@
 <?php
 
-namespace SimonDevelop\ArrayOrganize\Test;
+namespace SimonDevelop\Test;
 
 use \PHPUnit\Framework\TestCase;
 use \SimonDevelop\ArrayOrganize;
@@ -98,20 +98,51 @@ class ArrayOrganizeTest extends TestCase
      */
     public function testGenerateTable()
     {
-        $ArrayOrganize = new ArrayOrganize([
-          ["id" => 2, "name" => "test4"],
-          ["id" => 1, "name" => "test5"],
-          ["id" => 3, "name" => "test3"]
-        ]);
+        $datas = [
+          ["id" => 2, "name" => "example 5"],
+          ["id" => 1, "name" => "example 5"],
+          ["id" => 3, "name" => "example 3"],
+          ["id" => 6, "name" => "example 5"],
+          ["id" => 5, "name" => "example 3"],
+          ["id" => 4, "name" => "example 6"],
+        ];
 
-        $cssClass = ['table', 'table-striped'];
+        $ArrayOrganize = new ArrayOrganize($datas, 3, 1);
 
-        $this->assertContains('<table class="table table-striped">', (string)$ArrayOrganize->generateTable($cssClass));
+        $css = ['table', 'table-striped'];
+        $pager = [
+          "position" => "bottom",
+          "cssClass" => [
+            "ul" => "pagination",
+            "li" => "page-item",
+            "a" => "page-link",
+            "disabled" => [
+              "li" => "disabled"
+            ],
+            "active" => [
+              "li" => "active"
+            ]
+          ],
+          "url" => "index.php?p={}"
+        ];
 
-        $this->assertContains('<tr><th>id</th><th>name</th></tr>', (string)$ArrayOrganize->generateTable($cssClass));
-        $this->assertContains('<tr><td>2</td><td>test4</td></tr>', (string)$ArrayOrganize->generateTable($cssClass));
-        $this->assertContains('<tr><td>1</td><td>test5</td></tr>', (string)$ArrayOrganize->generateTable($cssClass));
-        $this->assertContains('<tr><td>3</td><td>test3</td></tr>', (string)$ArrayOrganize->generateTable($cssClass));
+        $this->assertContains('<table class="table table-striped">', $ArrayOrganize->generateTable($css, $pager));
+
+        $this->assertContains('<tr><th>id</th><th>name</th></tr>', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<tr><td>2</td><td>example 5</td></tr>', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<tr><td>1</td><td>example 5</td></tr>', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<tr><td>3</td><td>example 3</td></tr>', $ArrayOrganize->generateTable($css, $pager));
+
+        $this->assertContains('<ul class="pagination">', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<li class="page-item disabled">', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<a class="page-link">Previous</a>', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<li class="page-item active">', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<a class="page-link">1</a>', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains('<li class="page-item">', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertContains(
+            '<a class="page-link" href="index.php?p=2">2</a>',
+            $ArrayOrganize->generateTable($css, $pager)
+        );
     }
 
     /**
