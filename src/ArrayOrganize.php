@@ -34,19 +34,6 @@ class ArrayOrganize
     private $url = "#";
 
     /**
-     * @var array Text link for previous and next page
-     */
-    private $pages = [
-        "fr" => ["Précédent", "Suivant"],
-        "en" => ["Previous", "Next"]
-    ];
-
-    /**
-     * @var string Default lang
-     */
-    private $lang = "en";
-
-    /**
      * @var array Data
      */
     private $data;
@@ -56,7 +43,7 @@ class ArrayOrganize
      * @param int $byPage Number limit for pagination (optionnal)
      * @param int $page Current number page for pagination (optionnal)
      */
-    public function __construct(array $data = [], int $byPage = 20, int $page = 1, string $lang = "en")
+    public function __construct(array $data = [], int $byPage = 20, int $page = 1)
     {
         $this->data = $data;
 
@@ -70,12 +57,6 @@ class ArrayOrganize
             $this->page = $page;
         } else {
             throw new \Exception('Unable build: Argument $page must be an integer and greater than 0');
-        }
-
-        if (is_string($lang) && array_key_exists($lang, $this->pages)) {
-            $this->lang = $lang;
-        } else {
-            throw new \Exception('Unable build: Argument $lang must be an string and exist in languages supported');
         }
     }
 
@@ -163,12 +144,12 @@ class ArrayOrganize
                 $urlNext = "#";
             }
 
-            if (isset($pagination["lang"]) && isset($this->pages[$pagination["lang"]])) {
-                $previous = $this->pages[$pagination["lang"]][0];
-                $next = $this->pages[$pagination["lang"]][1];
+            if (isset($pagination["lang"]["previous"]) && isset($pagination["lang"]["next"])) {
+                $previous = $pagination["lang"]["previous"];
+                $next = $pagination["lang"]["next"];
             } else {
-                $previous = $this->pages["en"][0];
-                $next = $this->pages["en"][1];
+                $previous = "Previous";
+                $next = "Next";
             }
 
             if ($this->page > 1) {
@@ -336,81 +317,246 @@ class ArrayOrganize
 
     /**
      * @param array $cssClass Array css class for table balise (optionnal)
-     * @return string Return table html code with css class or not and data by page limit
+     * @param array $pagination Array pagination settings (optionnal)
+     * @return string|false Return table html code with css class or not and data by page limit | Return false otherwise
      */
     public function generateTable(array $cssClass = [], array $pagination = [])
     {
-        if (!empty($cssClass)) {
-            $class_table = implode(" ", $cssClass);
-        } else {
-            $class_table = "";
-        }
-
-        if (isset($pagination["url"])) {
-            $this->url = $pagination["url"];
-        }
-
-        $column = [];
-        $line = [];
-
-        foreach ($this->data as $array) {
-            $column = array_keys($array);
-            break;
-        }
-
-        if ($this->byPage == null) {
-            $count = count($this->data);
-            $page = 0;
-        } else {
-            $count = $this->byPage;
-            $page = $this->page-1;
-        }
-
-        $nb = 0;
-        for ($i = (0+($page*$count)); $i < ($count+($page*$count)); $i++) {
-            if (isset($this->data[$i])) {
-                foreach ($this->data[$i] as $k => $v) {
-                    $line[$nb][] = $v;
+        if (!empty($this->data)) {
+            foreach ($this->data as $v) {
+                foreach ($v as $val) {
+                    if (is_array($val)) {
+                        return false;
+                    }
                 }
-                $nb++;
             }
-        }
-        $html = "";
 
-        // Pagination TOP or FULL
-        if (isset($pagination["position"])
-        && ($pagination["position"] == "top" || $pagination["position"] == "full")) {
-            $html .= $this->generatePagination($pagination);
-        }
+            if (!empty($cssClass)) {
+                $class_table = implode(" ", $cssClass);
+            } else {
+                $class_table = "";
+            }
 
-        $html .= "<table class=\"".$class_table."\">
-              <thead>";
-        $html .= "<tr>";
+            if (isset($pagination["url"])) {
+                $this->url = $pagination["url"];
+            }
 
-        for ($i = 0; $i < count($column); $i++) {
-            $html .= "<th>".$column[$i]."</th>";
-        }
+            $column = [];
+            $line = [];
 
-        $html .= "</tr>
-            </thead>";
-        $html .= "<tbody>";
+            foreach ($this->data as $array) {
+                $column = array_keys($array);
+                break;
+            }
 
-        foreach ($line as $array) {
+            if ($this->byPage == null) {
+                $count = count($this->data);
+                $page = 0;
+            } else {
+                $count = $this->byPage;
+                $page = $this->page-1;
+            }
+
+            $nb = 0;
+            for ($i = (0+($page*$count)); $i < ($count+($page*$count)); $i++) {
+                if (isset($this->data[$i])) {
+                    foreach ($this->data[$i] as $k => $v) {
+                        $line[$nb][] = $v;
+                    }
+                    $nb++;
+                }
+            }
+            $html = "";
+
+            // Pagination TOP or FULL
+            if (isset($pagination["position"])
+            && ($pagination["position"] == "top" || $pagination["position"] == "full")) {
+                $html .= $this->generatePagination($pagination);
+            }
+
+            $html .= "<table class=\"".$class_table."\">
+                  <thead>";
             $html .= "<tr>";
-            foreach ($array as $k => $v) {
-                $html .= "<td>".$v."</td>";
+
+            for ($i = 0; $i < count($column); $i++) {
+                $html .= "<th>".$column[$i]."</th>";
             }
-            $html .= "</tr>";
+
+            $html .= "</tr>
+                </thead>";
+            $html .= "<tbody>";
+
+            foreach ($line as $array) {
+                $html .= "<tr>";
+                foreach ($array as $k => $v) {
+                    $html .= "<td>".$v."</td>";
+                }
+                $html .= "</tr>";
+            }
+
+            $html .= "</tbody>
+                </table>";
+
+            // Pagination BOTTOM or FULL
+            if (isset($pagination["position"])
+            && ($pagination["position"] == "bottom" || $pagination["position"] == "full")) {
+                $html .= $this->generatePagination($pagination);
+            }
+
+            return $html;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param array $cssClass Array css class for table balise (optionnal)
+     * @return string Return table html code with css class or not and data by page limit
+     */
+    public function generateList(array $cssClass = [])
+    {
+        $html = "";
+        if (!empty($cssClass)) {
+            if (isset($cssClass["ul"]) && is_string($cssClass["ul"])) {
+                $classUl = trim($cssClass["ul"]);
+            } else {
+                $classUl = "";
+            }
+            if (isset($cssClass["li"]) && is_string($cssClass["li"])) {
+                $classLi = trim($cssClass["li"]);
+            } else {
+                $classLi = "";
+            }
+            if (isset($cssClass["a"]) && is_string($cssClass["a"])) {
+                $classA = trim($cssClass["a"]);
+            } else {
+                $classA = "";
+            }
+            if (isset($cssClass["disabled"]) && is_array($cssClass["disabled"])) {
+                foreach ($cssClass["disabled"] as $k => $v) {
+                    if ($k == "li") {
+                        $classDisabledLi = $v;
+                    }
+                    if ($k == "a") {
+                        $classDisabledA = $v;
+                    }
+                }
+                if (!isset($classDisabledLi)) {
+                    $classDisabledLi = "";
+                }
+                if (!isset($classDisabledA)) {
+                    $classDisabledA = "";
+                }
+            } else {
+                $classDisabledLi = "";
+                $classDisabledA = "";
+            }
+            if (isset($cssClass["active"]) && is_array($cssClass["active"])) {
+                foreach ($cssClass["active"] as $k => $v) {
+                    if ($k == "li") {
+                        $classActiveLi = $v;
+                    }
+                    if ($k == "a") {
+                        $classActiveA = $v;
+                    }
+                }
+                if (!isset($classActiveLi)) {
+                    $classActiveLi = "";
+                }
+                if (!isset($classActiveA)) {
+                    $classActiveA = "";
+                }
+            } else {
+                $classActiveLi = "";
+                $classActiveA = "";
+            }
+            if (isset($cssClass["balise"]) && is_string($cssClass["balise"])) {
+                $balise = [];
+                if (preg_match("#/#", $cssClass["balise"])) {
+                    $explode = explode("/", $cssClass["balise"]);
+                    if ($explode[0] != $explode[1] && !empty($explode[0]) && !empty($explode[1])) {
+                        if ($explode[0] == "a" && $explode[1] == "li") {
+                            $balise = ["a", "li"];
+                        }
+                        if ($explode[0] == "li" && $explode[1] == "a") {
+                            $balise = ["li", "a"];
+                        }
+                    } else {
+                        $balise = ["li", "a"];
+                    }
+                } elseif ($cssClass["balise"] == "li") {
+                    $balise = ["li"];
+                } elseif ($cssClass["balise"] == "a") {
+                    $balise = ["a"];
+                } else {
+                    $balise = ["li", "a"];
+                }
+            } else {
+                $balise = ["li", "a"];
+            }
+        } else {
+            $classUl = "";
+            $classLi = "";
+            $classA = "";
+
+            $classDisabledLi = "";
+            $classDisabledA = "";
+
+            $classActiveLi = "";
+            $classActiveA = "";
         }
 
-        $html .= "</tbody>
-            </table>";
+        $html .= "<ul class=\"".$classUl."\">";
 
-        // Pagination BOTTOM or FULL
-        if (isset($pagination["position"])
-        && ($pagination["position"] == "bottom" || $pagination["position"] == "full")) {
-            $html .= $this->generatePagination($pagination);
+        foreach ($this->data as $k => $v) {
+            $classForThisLi = $classLi;
+            $classForThisA = $classA;
+            if (is_string($v["title"])) {
+                if (isset($v["active"]) && $v["active"] == true) {
+                    $classForThisLi .= " ".$classActiveLi;
+                    $classForThisA .= " ".$classActiveA;
+                }
+
+                if (isset($v["disabled"]) && $v["disabled"] == true) {
+                    $classForThisLi .= " ".$classDisabledLi;
+                    $classForThisA .= " ".$classDisabledA;
+                }
+
+                if (isset($v["url"]) && !empty($v["url"]) && is_string($v["url"])) {
+                    $htmlHref = " href=\"".$v["url"]."\"";
+                } else {
+                    $htmlHref = "";
+                }
+
+                if (isset($v["target_blank"]) && $v["target_blank"] == true) {
+                    $htmlTarget = " target=\"_blank\"";
+                } else {
+                    $htmlTarget = "";
+                }
+
+                if (isset($balise[0]) && isset($balise[1])) {
+                    if ($balise[0] == "li" && $balise[1] == "a") {
+                        $html .= "<li class=\"".$classForThisLi."\">";
+                        $html .= "<a class=\"".$classForThisA."\" ".$htmlHref.$htmlTarget.">".$v["title"]."</a>";
+                        $html .= "</li>";
+                    } elseif ($balise[0] == "a" && $balise[1] == "li") {
+                        $html .= "<a class=\"".$classForThisA."\" ".$htmlHref.$htmlTarget.">";
+                        $html .= "<li class=\"".$classForThisLi."\">".$v["title"]."</li>";
+                        $html .= "</a>";
+                    }
+                }
+
+                if (isset($balise[0]) && !isset($balise[1]) && $balise[0] == "li") {
+                    $html .= "<li class=\"".$classForThisLi."\">".$v["title"]."</li>";
+                }
+
+                if (isset($balise[0]) && !isset($balise[1]) && $balise[0] == "a") {
+                    $html .= "<a class=\"".$classForThisA."\" ".$htmlHref.$htmlTarget.">".$v["title"]."</a>";
+                }
+            }
         }
+
+        $html .= "</ul>";
 
         return $html;
     }
@@ -478,7 +624,7 @@ class ArrayOrganize
     }
 
     /**
-     * @return string Url pagination
+     * @return string Current url
      */
     public function getUrl()
     {
@@ -486,24 +632,16 @@ class ArrayOrganize
     }
 
     /**
-     * @return string Default language
+     * @param string $url Url with pattern for page id
+     * @return string Current url
      */
-    public function getLang()
+    public function setUrl(string $url)
     {
-        return $this->lang;
-    }
-
-    /**
-     * @param string $lang Default language
-     * @return string lang Default language
-     */
-    public function setLang(string $lang)
-    {
-        if (is_string($lang) && array_key_exists($lang, $this->pages)) {
-            $this->lang = $lang;
-            return $this->lang;
+        if (is_string($url) && preg_match("#{}#", $url)) {
+            $this->url = $url;
+            return str_replace("{}", $this->page, $this->url);
         } else {
-            throw new \Exception('Unable build: Argument must be an string and exist in languages supported');
+            throw new \Exception('Unable to "setUrl": Argument must be an string and contain pattern "{}" for id page');
         }
     }
 }

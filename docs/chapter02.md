@@ -32,7 +32,10 @@ $cssClass = ['table', 'table-striped'];
 
 // Settings to pager buttom with lang and url pagination
 $pager = [
-  "lang" => "fr", // Language for buttons / Default "en"
+  "lang" => [ // Text or HTML for buttons | Default text in english ("Previous" and "Next")
+    "previous" => "<< Previous",
+    "next" => "Next >>"
+  ],
   "position" => "bottom", // Position of pagination
   "cssClass" => [ // Css class for pagination
     "ul" => "pagination",

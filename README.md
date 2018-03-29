@@ -51,6 +51,10 @@ $cssClass = ['table', 'table-striped'];
 // Settings of pagination
 $pager = [
   "position" => "bottom",
+  "lang" => [
+    "previous" => "<< Previous",
+    "next" => "Next >>"
+  ],
   "cssClass" => [
     "ul" => "pagination",
     "li" => "page-item",
