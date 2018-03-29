@@ -54,7 +54,50 @@ $pager = [
 // This function return the html code of your table
 $obj->generateTable($cssClass, $pager);
 ```
-Check the example on the [README.md](https://github.com/SimonDevelop/array-organize/blob/master/README.md) file.
+
+### generateList ( array $cssClass [ ] )
+```php
+<?php
+
+// My data list
+$data = [
+  ["title" => "Test list 1"],
+  [
+    "title" => "Test list 2",
+    "url" => "http://ddg.gg/",
+    "target_blank" => true
+  ],
+  [
+    "title" => "Test list 3",
+    "active" => true
+  ],
+  [
+    "title" => "Test list 4",
+    "disabled" => true
+  ],
+];
+
+// Init object with data
+$obj = new ArrayOrganize($data);
+
+// Css settings for style balises (example with bootstrap 4)
+$cssClass = [
+  "ul" => "list-group",
+  "li" => "list-group-item",
+  "disabled" => [ // Css class for disabled style (<li> and <a> only supported)
+    "li" => "disabled",
+  ],
+  "active" => [ // Css class for active style (<li> and <a> only supported)
+    "li" => "active",
+  ],
+  "balise" => "li/a" // ("li", "a", "li/a" and "a/li" ) default "li/a"
+];
+
+// This function return the html code of your list
+$obj->generateList($cssClass);
+// the data listed must always have the "title" key
+// the url of data listed must always have the "url" key (url optionnal)
+```
 
 | Introduction | Previous chapter |
 | :---------------------: | :--------------: |

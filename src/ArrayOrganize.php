@@ -410,8 +410,8 @@ class ArrayOrganize
     }
 
     /**
-     * @param array $cssClass Array css class for table balise (optionnal)
-     * @return string Return table html code with css class or not and data by page limit
+     * @param array $cssClass Array css class for list balise (optionnal)
+     * @return string|false Return list html code with css class or not | return false if data empty or bad format
      */
     public function generateList(array $cssClass = [])
     {
@@ -511,7 +511,7 @@ class ArrayOrganize
         foreach ($this->data as $k => $v) {
             $classForThisLi = $classLi;
             $classForThisA = $classA;
-            if (is_string($v["title"])) {
+            if (isset($v["title"]) && is_string($v["title"])) {
                 if (isset($v["active"]) && $v["active"] == true) {
                     $classForThisLi .= " ".$classActiveLi;
                     $classForThisA .= " ".$classActiveA;
@@ -537,10 +537,10 @@ class ArrayOrganize
                 if (isset($balise[0]) && isset($balise[1])) {
                     if ($balise[0] == "li" && $balise[1] == "a") {
                         $html .= "<li class=\"".$classForThisLi."\">";
-                        $html .= "<a class=\"".$classForThisA."\" ".$htmlHref.$htmlTarget.">".$v["title"]."</a>";
+                        $html .= "<a class=\"".$classForThisA."\"".$htmlHref.$htmlTarget.">".$v["title"]."</a>";
                         $html .= "</li>";
                     } elseif ($balise[0] == "a" && $balise[1] == "li") {
-                        $html .= "<a class=\"".$classForThisA."\" ".$htmlHref.$htmlTarget.">";
+                        $html .= "<a class=\"".$classForThisA."\"".$htmlHref.$htmlTarget.">";
                         $html .= "<li class=\"".$classForThisLi."\">".$v["title"]."</li>";
                         $html .= "</a>";
                     }
@@ -553,6 +553,8 @@ class ArrayOrganize
                 if (isset($balise[0]) && !isset($balise[1]) && $balise[0] == "a") {
                     $html .= "<a class=\"".$classForThisA."\" ".$htmlHref.$htmlTarget.">".$v["title"]."</a>";
                 }
+            } else {
+                return false;
             }
         }
 

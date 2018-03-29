@@ -117,7 +117,7 @@ class ArrayOrganizeTest extends TestCase
           ["id" => 3, "name" => "example 3"],
           ["id" => 6, "name" => "example 5"],
           ["id" => 5, "name" => "example 3"],
-          ["id" => 4, "name" => "example 6"],
+          ["id" => 4, "name" => "example 6"]
         ];
 
         $ArrayOrganize = new ArrayOrganize($datas, 3, 1);
@@ -166,6 +166,57 @@ class ArrayOrganizeTest extends TestCase
           ["id" => 1, "name" => []],
         ], 3, 1);
         $this->assertEquals(false, $ArrayOrganize->generateTable($css, $pager));
+    }
+
+    /**
+     * GenerateList function test
+     */
+    public function testGenerateList()
+    {
+        $datas = [
+          ["title" => "Test list 1"],
+          [
+            "title" => "Test list 2",
+            "url" => "http://ddg.gg/",
+            "target_blank" => true
+          ],
+          [
+            "title" => "Test list 3",
+            "active" => true
+          ],
+          [
+            "title" => "Test list 4",
+            "disabled" => true
+          ]
+        ];
+
+        $ArrayOrganize = new ArrayOrganize($datas);
+
+        $cssClass = [
+          "ul" => "list-group",
+          "li" => "list-group-item",
+          "disabled" => [
+            "li" => "disabled",
+          ],
+          "active" => [
+            "li" => "active",
+          ],
+          "balise" => "li/a"
+        ];
+
+        $this->assertContains('<ul class="list-group">', $ArrayOrganize->generateList($cssClass));
+        $this->assertContains('<li class="list-group-item">', $ArrayOrganize->generateList($cssClass));
+        $this->assertContains('<a class="">Test list 1</a>', $ArrayOrganize->generateList($cssClass));
+        $this->assertContains(
+            '<a class="" href="http://ddg.gg/" target="_blank">Test list 2</a>',
+            $ArrayOrganize->generateList($cssClass)
+        );
+
+        $ArrayOrganize = new ArrayOrganize([
+          ["title" => "title 1"],
+          ["test" => "title 2"],
+        ]);
+        $this->assertEquals(false, $ArrayOrganize->generateList($cssClass));
     }
 
     /**
