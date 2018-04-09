@@ -192,7 +192,7 @@ class ArrayOrganize
     }
 
     /**
-     * @param string $on Column to order
+     * @param string $on Column to order data
      * @param string $order Meaning order by 'ASC' or 'DESC' (optionnal)
      * @return bool Return true if data sorted | Return false if data array empty or not a array
      */
@@ -241,8 +241,8 @@ class ArrayOrganize
     }
 
     /**
-     * @param string $action
-     * @param array $columns
+     * @param string $action filter "skip" or "keep" columns list
+     * @param array $columns list
      * @return bool Return true if data column(s) filtered | Return false if not filtered
      */
     public function dataColumnFilter(string $action = "skip", array $columns = [])
@@ -284,7 +284,7 @@ class ArrayOrganize
     }
 
     /**
-     * @param array $columns
+     * @param array $columns filter param
      * @return bool Return true if data filtered | Return false if not filtered
      */
     public function dataFilter(array $columns = [])
