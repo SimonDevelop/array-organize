@@ -52,6 +52,7 @@ $obj = new ArrayOrganize();
 $obj->setData($data);
 
 $obj->dataFilter(["name" => "example 5"]);
+// use ["name" => "%example%"] for like filter
 
 $filted = $obj->getData();
 $filted = [
