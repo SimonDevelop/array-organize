@@ -241,6 +241,7 @@ class ArrayOrganize
     }
 
     /**
+     * @param string $action
      * @param array $columns
      * @return bool Return true if data column(s) filtered | Return false if not filtered
      */
@@ -294,8 +295,17 @@ class ArrayOrganize
                     foreach ($this->data as $k => $v) {
                         if (is_array($v)) {
                             foreach ($v as $k2 => $v2) {
-                                if (isset($columns[$k2]) && $v2 != $columns[$k2]) {
-                                    unset($this->data[$k]);
+                                foreach ($columns as $key => $val) {
+                                    if (substr($val, -1) == "%" && substr($val, 0, 1) == "%") {
+                                        $explode = explode("%", $val);
+                                        if (isset($columns[$k2]) && !preg_match("#".$explode[1]."#", $v2)) {
+                                            unset($this->data[$k]);
+                                        }
+                                    } else {
+                                        if (isset($columns[$k2]) && $v2 != $columns[$k2]) {
+                                            unset($this->data[$k]);
+                                        }
+                                    }
                                 }
                             }
                         } else {

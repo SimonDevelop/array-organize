@@ -99,6 +99,19 @@ class ArrayOrganizeTest extends TestCase
             ["id" => 2, "name" => "test3"]
         ], $ArrayOrganize->getData());
 
+        $ArrayOrganize = new ArrayOrganize([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ]);
+        $result = $ArrayOrganize->dataFilter(["name" => "%php%"]);
+
+        $this->assertEquals(true, $result);
+        $this->assertEquals([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"]
+        ], $ArrayOrganize->getData());
+
         $ArrayOrganize = new ArrayOrganize();
         $result = $ArrayOrganize->dataFilter(["id" => 2]);
 
