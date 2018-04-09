@@ -71,8 +71,8 @@ class ArrayOrganizeTest extends TestCase
         $this->assertEquals(true, $result);
         $this->assertEquals([
             ["name" => "test3"],
-          ["name" => "test4"],
-          ["name" => "test5"]
+            ["name" => "test4"],
+            ["name" => "test5"]
         ], $ArrayOrganize->getData());
 
         $ArrayOrganize = new ArrayOrganize();
@@ -99,6 +99,19 @@ class ArrayOrganizeTest extends TestCase
             ["id" => 2, "name" => "test3"]
         ], $ArrayOrganize->getData());
 
+        $ArrayOrganize = new ArrayOrganize([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ]);
+        $result = $ArrayOrganize->dataFilter(["name" => "%php%"]);
+
+        $this->assertEquals(true, $result);
+        $this->assertEquals([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"]
+        ], $ArrayOrganize->getData());
+
         $ArrayOrganize = new ArrayOrganize();
         $result = $ArrayOrganize->dataFilter(["id" => 2]);
 
@@ -112,35 +125,35 @@ class ArrayOrganizeTest extends TestCase
     public function testGenerateTable()
     {
         $datas = [
-          ["id" => 2, "name" => "example 5"],
-          ["id" => 1, "name" => "example 5"],
-          ["id" => 3, "name" => "example 3"],
-          ["id" => 6, "name" => "example 5"],
-          ["id" => 5, "name" => "example 3"],
-          ["id" => 4, "name" => "example 6"]
+            ["id" => 2, "name" => "example 5"],
+            ["id" => 1, "name" => "example 5"],
+            ["id" => 3, "name" => "example 3"],
+            ["id" => 6, "name" => "example 5"],
+            ["id" => 5, "name" => "example 3"],
+            ["id" => 4, "name" => "example 6"]
         ];
 
         $ArrayOrganize = new ArrayOrganize($datas, 3, 1);
 
         $css = ['table', 'table-striped'];
         $pager = [
-          "position" => "bottom",
-          "lang" => [
-            "previous" => "<< Previous",
-            "next" => "Next >>"
-          ],
-          "cssClass" => [
-            "ul" => "pagination",
-            "li" => "page-item",
-            "a" => "page-link",
-            "disabled" => [
-              "li" => "disabled"
+            "position" => "bottom",
+            "lang" => [
+                "previous" => "<< Previous",
+                "next" => "Next >>"
             ],
-            "active" => [
-              "li" => "active"
-            ]
-          ],
-          "url" => "index.php?p={}"
+            "cssClass" => [
+                "ul" => "pagination",
+                "li" => "page-item",
+                "a" => "page-link",
+                "disabled" => [
+                    "li" => "disabled"
+                ],
+                "active" => [
+                    "li" => "active"
+                ]
+            ],
+            "url" => "index.php?p={}"
         ];
 
         $this->assertContains('<table class="table table-striped">', $ArrayOrganize->generateTable($css, $pager));
@@ -162,8 +175,8 @@ class ArrayOrganizeTest extends TestCase
         );
 
         $ArrayOrganize = new ArrayOrganize([
-          ["id" => 2, "name" => "example 5"],
-          ["id" => 1, "name" => []],
+            ["id" => 2, "name" => "example 5"],
+            ["id" => 1, "name" => []],
         ], 3, 1);
         $this->assertEquals(false, $ArrayOrganize->generateTable($css, $pager));
     }
@@ -174,34 +187,34 @@ class ArrayOrganizeTest extends TestCase
     public function testGenerateList()
     {
         $datas = [
-          ["title" => "Test list 1"],
-          [
-            "title" => "Test list 2",
-            "url" => "http://ddg.gg/",
-            "target_blank" => true
-          ],
-          [
-            "title" => "Test list 3",
-            "active" => true
-          ],
-          [
-            "title" => "Test list 4",
-            "disabled" => true
-          ]
+            ["title" => "Test list 1"],
+            [
+                "title" => "Test list 2",
+                "url" => "http://ddg.gg/",
+                "target_blank" => true
+            ],
+            [
+                "title" => "Test list 3",
+                "active" => true
+            ],
+            [
+                "title" => "Test list 4",
+                "disabled" => true
+            ]
         ];
 
         $ArrayOrganize = new ArrayOrganize($datas);
 
         $cssClass = [
-          "ul" => "list-group",
-          "li" => "list-group-item",
-          "disabled" => [
-            "li" => "disabled",
-          ],
-          "active" => [
-            "li" => "active",
-          ],
-          "balise" => "li/a"
+            "ul" => "list-group",
+            "li" => "list-group-item",
+            "disabled" => [
+                "li" => "disabled",
+            ],
+            "active" => [
+                "li" => "active",
+            ],
+            "balise" => "li/a"
         ];
 
         $this->assertContains('<ul class="list-group">', $ArrayOrganize->generateList($cssClass));
@@ -213,8 +226,8 @@ class ArrayOrganizeTest extends TestCase
         );
 
         $ArrayOrganize = new ArrayOrganize([
-          ["title" => "title 1"],
-          ["test" => "title 2"],
+            ["title" => "title 1"],
+            ["test" => "title 2"],
         ]);
         $this->assertEquals(false, $ArrayOrganize->generateList($cssClass));
     }

@@ -192,7 +192,7 @@ class ArrayOrganize
     }
 
     /**
-     * @param string $on Column to order
+     * @param string $on Column to order data
      * @param string $order Meaning order by 'ASC' or 'DESC' (optionnal)
      * @return bool Return true if data sorted | Return false if data array empty or not a array
      */
@@ -241,7 +241,8 @@ class ArrayOrganize
     }
 
     /**
-     * @param array $columns
+     * @param string $action filter "skip" or "keep" columns list
+     * @param array $columns list
      * @return bool Return true if data column(s) filtered | Return false if not filtered
      */
     public function dataColumnFilter(string $action = "skip", array $columns = [])
@@ -283,7 +284,7 @@ class ArrayOrganize
     }
 
     /**
-     * @param array $columns
+     * @param array $columns filter param
      * @return bool Return true if data filtered | Return false if not filtered
      */
     public function dataFilter(array $columns = [])
@@ -294,8 +295,17 @@ class ArrayOrganize
                     foreach ($this->data as $k => $v) {
                         if (is_array($v)) {
                             foreach ($v as $k2 => $v2) {
-                                if (isset($columns[$k2]) && $v2 != $columns[$k2]) {
-                                    unset($this->data[$k]);
+                                foreach ($columns as $key => $val) {
+                                    if (substr($val, -1) == "%" && substr($val, 0, 1) == "%") {
+                                        $explode = explode("%", $val);
+                                        if (isset($columns[$k2]) && !preg_match("#".$explode[1]."#", $v2)) {
+                                            unset($this->data[$k]);
+                                        }
+                                    } else {
+                                        if (isset($columns[$k2]) && $v2 != $columns[$k2]) {
+                                            unset($this->data[$k]);
+                                        }
+                                    }
                                 }
                             }
                         } else {
