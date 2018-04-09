@@ -17,10 +17,9 @@ namespace SimonDevelop;
  */
 class ArrayOrganize
 {
-
-  /**
-   * @var int Number Data by page limit
-   */
+    /**
+     * @var int Number Data by page limit
+     */
     private $byPage;
 
     /**
