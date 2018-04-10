@@ -87,6 +87,7 @@ class ArrayOrganizeTest extends TestCase
      */
     public function testDataFilter()
     {
+        // is
         $ArrayOrganize = new ArrayOrganize([
             ["id" => 2, "name" => "test3"],
             ["id" => 1, "name" => "test4"],
@@ -99,6 +100,20 @@ class ArrayOrganizeTest extends TestCase
             ["id" => 2, "name" => "test3"]
         ], $ArrayOrganize->getData());
 
+        // is not
+        $ArrayOrganize = new ArrayOrganize([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ]);
+        $result = $ArrayOrganize->dataFilter(["name[!=]" => "js"]);
+        $this->assertEquals(true, $result);
+        $this->assertEquals([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"]
+        ], $ArrayOrganize->getData());
+
+        // like
         $ArrayOrganize = new ArrayOrganize([
             ["id" => 2, "name" => "php"],
             ["id" => 1, "name" => "php is a live"],
@@ -112,6 +127,59 @@ class ArrayOrganizeTest extends TestCase
             ["id" => 1, "name" => "php is a live"]
         ], $ArrayOrganize->getData());
 
+        // upper
+        $ArrayOrganize = new ArrayOrganize([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ]);
+        $result = $ArrayOrganize->dataFilter(["id[>]" => 1]);
+        $this->assertEquals(true, $result);
+        $this->assertEquals([
+            ["id" => 2, "name" => "php"],
+            ["id" => 3, "name" => "js"]
+        ], $ArrayOrganize->getData());
+
+        // upper and equal
+        $ArrayOrganize = new ArrayOrganize([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ]);
+        $result = $ArrayOrganize->dataFilter(["id[>=]" => 1]);
+        $this->assertEquals(true, $result);
+        $this->assertEquals([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ], $ArrayOrganize->getData());
+
+        // lower
+        $ArrayOrganize = new ArrayOrganize([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ]);
+        $result = $ArrayOrganize->dataFilter(["id[<]" => 2]);
+        $this->assertEquals(true, $result);
+        $this->assertEquals([
+            ["id" => 1, "name" => "php is a live"]
+        ], $ArrayOrganize->getData());
+
+        // lower and equal
+        $ArrayOrganize = new ArrayOrganize([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+            ["id" => 3, "name" => "js"]
+        ]);
+        $result = $ArrayOrganize->dataFilter(["id[<=]" => 2]);
+        $this->assertEquals(true, $result);
+        $this->assertEquals([
+            ["id" => 2, "name" => "php"],
+            ["id" => 1, "name" => "php is a live"],
+        ], $ArrayOrganize->getData());
+
+        // error
         $ArrayOrganize = new ArrayOrganize();
         $result = $ArrayOrganize->dataFilter(["id" => 2]);
 

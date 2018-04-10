@@ -53,6 +53,13 @@ $obj->setData($data);
 
 $obj->dataFilter(["name" => "example 5"]);
 // use ["name" => "%example%"] for like filter
+// use ["id[<]" => 2] for id less than 2
+// use ["id[<=]" => 2] for id less than or equal to 2
+// use ["id[>]" => 2] for id greater than 2
+// use ["id[>=]" => 2] for id greater than or equal to 2
+// for date value, use string format YYYY-MM-DD
+
+// Filters only work 'and' algorithm serie
 
 $filted = $obj->getData();
 $filted = [
