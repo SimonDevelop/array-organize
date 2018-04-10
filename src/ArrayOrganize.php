@@ -301,6 +301,84 @@ class ArrayOrganize
                                         if (isset($columns[$k2]) && !preg_match("#".$explode[1]."#", $v2)) {
                                             unset($this->data[$k]);
                                         }
+                                    } elseif (substr($key, -3) === "[<]") {
+                                        $explode = explode("[<]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 >= $val) {
+                                                unset($this->data[$k]);
+                                            }
+                                        } else {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) >= floatval($val)) {
+                                                unset($this->data[$k]);
+                                            }
+                                        }
+                                    } elseif (substr($key, -4) === "[<=]") {
+                                        $explode = explode("[<=]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 > $val) {
+                                                unset($this->data[$k]);
+                                            }
+                                        } else {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) > floatval($val)) {
+                                                unset($this->data[$k]);
+                                            }
+                                        }
+                                    } elseif (substr($key, -3) === "[>]") {
+                                        $explode = explode("[>]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 <= $val) {
+                                                unset($this->data[$k]);
+                                            }
+                                        } else {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) <= floatval($val)) {
+                                                unset($this->data[$k]);
+                                            }
+                                        }
+                                    } elseif (substr($key, -4) === "[>=]") {
+                                        $explode = explode("[>=]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 < $val) {
+                                                unset($this->data[$k]);
+                                            }
+                                        } else {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) < floatval($val)) {
+                                                unset($this->data[$k]);
+                                            }
+                                        }
+                                    } elseif (substr($key, -4) === "[!=]") {
+                                        $explode = explode("[!=]", $key);
+                                        $kv = $explode[0];
+                                        if (isset($this->data[$k][$kv]) && $this->data[$k][$kv] == $columns[$key]) {
+                                            unset($this->data[$k]);
+                                        }
                                     } else {
                                         if (isset($columns[$k2]) && $v2 != $columns[$k2]) {
                                             unset($this->data[$k]);
