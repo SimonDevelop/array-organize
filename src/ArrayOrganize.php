@@ -38,6 +38,11 @@ class ArrayOrganize
     private $data;
 
     /**
+     * @var array Functions columns
+     */
+    private $functions = [];
+
+    /**
      * @param array $data Data to sort (optionnal)
      * @param int $byPage Number limit for pagination (optionnal)
      * @param int $page Current number page for pagination (optionnal)
@@ -407,6 +412,30 @@ class ArrayOrganize
     }
 
     /**
+     * @param string $column Name of the column for used function
+     * @param string $function Name of function for column
+     * @param array $params Parameters of function
+     * @return bool returns true or false if error
+     */
+    public function addFunction(string $column, string $function, array $params = [])
+    {
+        foreach ($this->data as $k => $v) {
+            if (is_array($v)) {
+                if (!array_key_exists($column, $v)) {
+                    return false;
+                }
+            } else {
+                throw new \Exception('Unable to filter: Bad format data for (addFunction)');
+            }
+        }
+        $this->functions[$column] = [
+            "function" => $function,
+            "params" => $params
+        ];
+        return true;
+    }
+
+    /**
      * @param array $cssClass Array css class for table balise (optionnal)
      * @param array $pagination Array pagination settings (optionnal)
      * @return string|false Return table html code with css class or not and data by page limit | Return false otherwise
@@ -480,7 +509,13 @@ class ArrayOrganize
             foreach ($line as $array) {
                 $html .= "<tr>";
                 foreach ($array as $k => $v) {
-                    $html .= "<td>".$v."</td>";
+                    if (array_key_exists($column[$k], $this->functions)) {
+                        $function = $this->functions[$column[$k]]["function"];
+                        $params = array_merge([$v], $this->functions[$column[$k]]["params"]);
+                        $html .= "<td>".call_user_func_array($function, $params)."</td>";
+                    } else {
+                        $html .= "<td>".$v."</td>";
+                    }
                 }
                 $html .= "</tr>";
             }

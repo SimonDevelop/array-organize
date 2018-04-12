@@ -55,6 +55,35 @@ $pager = [
 $obj->generateTable($cssClass, $pager);
 ```
 
+### addFunction (string $column, string $function, array $params = [])
+```php
+<?php
+
+// My data
+$data = [
+    ["id" => 2, "name" => "example 4"],
+    ["id" => 1, "name" => "example 5"],
+    ["id" => 3, "name" => "example 3"],
+    ["id" => 5, "name" => "example 7"],
+    ["id" => 4, "name" => "example 6"]
+];
+
+$obj = new ArrayOrganize($data);
+
+// Custom function for 'name' column of table (the first parameter must always be the value of the column)
+function test($col, string $text) {
+  return "(".$col.") ".$text;
+}
+
+// Using custom function for value on column name
+$obj->addFunction("name", "test", ["it's easy"]);
+
+// This function return the html code of your table
+$obj->generateTable();
+
+// table returned with formatted column 'name' with the custom function
+```
+
 ### generateList (array $cssClass = [])
 ```php
 <?php
