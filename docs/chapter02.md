@@ -56,6 +56,7 @@ $obj->generateTable($cssClass, $pager);
 ```
 
 ### addFunction (string $column, string $function, array $params = [])
+##### (Only used for generate table)
 ```php
 <?php
 
@@ -82,6 +83,36 @@ $obj->addFunction("name", "test", ["it's easy"]);
 $obj->generateTable();
 
 // table returned with formatted column 'name' with the custom function
+```
+
+### addTotal (string $column, string $text = "")
+##### (Only used for generate table)
+```php
+<?php
+
+// My data
+$data = [
+    ["id" => 2, "val" => 6],
+    ["id" => 1, "val" => 6],
+    ["id" => 3, "val" => 3],
+    ["id" => 6, "val" => 5],
+    ["id" => 5, "val" => 3],
+    ["id" => 4, "val" => 6],
+    ["id" => 7, "val" => 6],
+    ["id" => 8, "val" => 7],
+    ["id" => 9, "val" => 7],
+    ["id" => 10, "val" => 5]
+];
+
+$obj = new ArrayOrganize($data);
+
+// Create line with total (the first parameter must be the column name)
+$obj->addTotal("val", "<strong>Total :</strong> ");
+
+// This function return the html code of your table
+$obj->generateTable();
+
+// table returned with additional line column 'val' for the total
 ```
 
 ### generateList (array $cssClass = [])

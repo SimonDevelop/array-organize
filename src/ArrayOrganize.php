@@ -43,6 +43,11 @@ class ArrayOrganize
     private $functions = [];
 
     /**
+     * @var array Totals columns
+     */
+    private $totals = [];
+
+    /**
      * @param array $data Data to sort (optionnal)
      * @param int $byPage Number limit for pagination (optionnal)
      * @param int $page Current number page for pagination (optionnal)
@@ -436,6 +441,33 @@ class ArrayOrganize
     }
 
     /**
+     * @param string $column Name of the column for used function
+     * @param string $text Text or html before total
+     * @return bool returns true or false if error
+     */
+    public function addTotal(string $column, string $text = "")
+    {
+        foreach ($this->data as $k => $v) {
+            if (is_array($v)) {
+                if (!array_key_exists($column, $v)) {
+                    return false;
+                } else {
+                    if (!is_int($v[$column]) && !is_float($v[$column])) {
+                        return false;
+                    }
+                }
+            } else {
+                throw new \Exception('Unable to filter: Bad format data for (addTotal)');
+            }
+        }
+        $this->totals[$column] = [
+            "text" => $text,
+            "value" => 0
+        ];
+        return true;
+    }
+
+    /**
      * @param array $cssClass Array css class for table balise (optionnal)
      * @param array $pagination Array pagination settings (optionnal)
      * @return string|false Return table html code with css class or not and data by page limit | Return false otherwise
@@ -509,15 +541,37 @@ class ArrayOrganize
             foreach ($line as $array) {
                 $html .= "<tr>";
                 foreach ($array as $k => $v) {
-                    if (array_key_exists($column[$k], $this->functions)) {
+                    if (!empty($this->functions) && array_key_exists($column[$k], $this->functions)) {
                         $function = $this->functions[$column[$k]]["function"];
                         $params = array_merge([$v], $this->functions[$column[$k]]["params"]);
                         $html .= "<td>".call_user_func_array($function, $params)."</td>";
                     } else {
                         $html .= "<td>".$v."</td>";
                     }
+
+                    if (!empty($this->totals) && array_key_exists($column[$k], $this->totals)
+                    && (is_int($v) || is_float($v))) {
+                        $this->totals[$column[$k]]['value'] += $v;
+                    }
                 }
                 $html .= "</tr>";
+            }
+
+            if (!empty($this->functions)) {
+                $this->functions = [];
+            }
+
+            if (!empty($this->totals)) {
+                $html .= "<tr>";
+                foreach ($column as $k => $v) {
+                    if (array_key_exists($v, $this->totals)) {
+                        $html .= "<td>".$this->totals[$v]["text"].$this->totals[$v]['value']."</td>";
+                    } else {
+                        $html .= "<td></td>";
+                    }
+                }
+                $html .= "</tr>";
+                $this->totals = [];
             }
 
             $html .= "</tbody>
