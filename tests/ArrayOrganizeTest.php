@@ -250,6 +250,34 @@ class ArrayOrganizeTest extends TestCase
     }
 
     /**
+     * AddTotal function test
+     */
+    public function testAddTotal()
+    {
+        $datas = [
+            ["id" => 2, "val" => 6],
+            ["id" => 1, "val" => 6],
+            ["id" => 3, "val" => 3],
+            ["id" => 6, "val" => 5],
+            ["id" => 5, "val" => 3],
+            ["id" => 4, "val" => 6],
+            ["id" => 7, "val" => 6],
+            ["id" => 8, "val" => 7],
+            ["id" => 9, "val" => 7],
+            ["id" => 10, "val" => 5]
+        ];
+
+        $ArrayOrganize = new ArrayOrganize($datas);
+        $result = $ArrayOrganize->addTotal("val", "<strong>Total :</strong> ");
+        $this->assertEquals(true, $result);
+
+        $this->assertContains(
+            '<tr><td></td><td><strong>Total :</strong> 54</td></tr></tbody>',
+            $ArrayOrganize->generateTable()
+        );
+    }
+
+    /**
      * GenerateList function test
      */
     public function testGenerateList()
