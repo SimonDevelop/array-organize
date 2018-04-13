@@ -1,4 +1,4 @@
-[![version](https://img.shields.io/badge/Version-0.0.8-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.0.8)
+[![version](https://img.shields.io/badge/Version-0.1.0-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.1.0)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg)](https://php.net/)
 [![Build Status](https://travis-ci.org/SimonDevelop/array-organize.svg?branch=master)](https://travis-ci.org/SimonDevelop/array-organize)
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/SimonDevelop/array-organize/blob/master/LICENSE)
@@ -76,8 +76,8 @@ $pager = [
   <head>
     <meta charset="utf-8">
     <title>ArrayOrganize</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+    integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   </head>
   <body>
     <div class="container">
@@ -93,3 +93,6 @@ $pager = [
 Check this [docs](https://github.com/SimonDevelop/array-organize/blob/master/docs/introduction.md) for more.
 
 #### Go to contribute !
+- Check the [Code of Conduct](https://github.com/SimonDevelop/array-organize/blob/master/.github/CODE_OF_CONDUCT.md)
+- Check the [Contributing file](https://github.com/SimonDevelop/array-organize/blob/master/.github/CONTRIBUTING.md)
+- Check the [Pull Request Template](https://github.com/SimonDevelop/array-organize/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
