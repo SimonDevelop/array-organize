@@ -250,6 +250,42 @@ class ArrayOrganizeTest extends TestCase
     }
 
     /**
+     * AddFunction function test
+     */
+    public function testAddFunction()
+    {
+        $datas = [
+            ["id" => 2, "name" => "example 5"],
+            ["id" => 1, "name" => "example 5"],
+            ["id" => 3, "name" => "example 3"],
+            ["id" => 6, "name" => "example 5"],
+            ["id" => 5, "name" => "example 3"],
+            ["id" => 4, "name" => "example 6"]
+        ];
+
+        $ArrayOrganize = new ArrayOrganize($datas);
+
+        $result = $ArrayOrganize->addFunction("name", "substr", [0, -2]);
+        $this->assertEquals(true, $result);
+        $this->assertContains('<tr><td>2</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+
+        $ArrayOrganize->addFunction("name", "substr", [0, -2]);
+        $this->assertContains('<tr><td>1</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+
+        $ArrayOrganize->addFunction("name", "substr", [0, -2]);
+        $this->assertContains('<tr><td>3</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+
+        $ArrayOrganize->addFunction("name", "substr", [0, -2]);
+        $this->assertContains('<tr><td>6</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+
+        $ArrayOrganize->addFunction("name", "substr", [0, -2]);
+        $this->assertContains('<tr><td>5</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+
+        $ArrayOrganize->addFunction("name", "substr", [0, -2]);
+        $this->assertContains('<tr><td>4</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+    }
+
+    /**
      * AddTotal function test
      */
     public function testAddTotal()
