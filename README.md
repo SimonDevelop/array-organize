@@ -2,6 +2,7 @@
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg)](https://php.net/)
 [![Build Status](https://travis-ci.org/SimonDevelop/array-organize.svg?branch=master)](https://travis-ci.org/SimonDevelop/array-organize)
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/SimonDevelop/array-organize/blob/master/LICENSE)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSimonDevelop%2Farray-organize.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSimonDevelop%2Farray-organize?ref=badge_shield)
 # array-organize
 Php library for easy sorting of data, generate html table and more.
 
@@ -96,3 +97,7 @@ Check this [docs](https://github.com/SimonDevelop/array-organize/blob/master/doc
 - Check the [Code of Conduct](https://github.com/SimonDevelop/array-organize/blob/master/.github/CODE_OF_CONDUCT.md)
 - Check the [Contributing file](https://github.com/SimonDevelop/array-organize/blob/master/.github/CONTRIBUTING.md)
 - Check the [Pull Request Template](https://github.com/SimonDevelop/array-organize/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSimonDevelop%2Farray-organize.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FSimonDevelop%2Farray-organize?ref=badge_large)
