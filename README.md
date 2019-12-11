@@ -1,6 +1,7 @@
 [![version](https://img.shields.io/badge/Version-0.1.1-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.1.1)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg)](https://php.net/)
 [![Build Status](https://travis-ci.org/SimonDevelop/array-organize.svg?branch=master)](https://travis-ci.org/SimonDevelop/array-organize)
+[![Github Actions PHP](https://github.com/SimonDevelop/array-organize/workflows/PHP/badge.svg)](https://github.com/SimonDevelop/array-organize/actions)
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/SimonDevelop/array-organize/blob/master/LICENSE)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSimonDevelop%2Farray-organize.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSimonDevelop%2Farray-organize?ref=badge_shield)
 # array-organize
