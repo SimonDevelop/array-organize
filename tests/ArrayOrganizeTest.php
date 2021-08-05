@@ -224,22 +224,23 @@ class ArrayOrganizeTest extends TestCase
             "url" => "index.php?p={}"
         ];
 
-        $this->assertContains('<table class="table table-striped">', $ArrayOrganize->generateTable($css, $pager));
+        $html = $ArrayOrganize->generateTable($css, $pager);
+        $this->assertStringContainsString('<table class="table table-striped">', $html);
 
-        $this->assertContains('<tr><th>id</th><th>name</th></tr>', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<tr><td>2</td><td>example 5</td></tr>', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<tr><td>1</td><td>example 5</td></tr>', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<tr><td>3</td><td>example 3</td></tr>', $ArrayOrganize->generateTable($css, $pager));
+        $this->assertStringContainsString('<tr><th>id</th><th>name</th></tr>', $html);
+        $this->assertStringContainsString('<tr><td>2</td><td>example 5</td></tr>', $html);
+        $this->assertStringContainsString('<tr><td>1</td><td>example 5</td></tr>', $html);
+        $this->assertStringContainsString('<tr><td>3</td><td>example 3</td></tr>', $html);
 
-        $this->assertContains('<ul class="pagination">', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<li class="page-item disabled">', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<a class="page-link"><< Previous</a>', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<li class="page-item active">', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<a class="page-link">1</a>', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains('<li class="page-item">', $ArrayOrganize->generateTable($css, $pager));
-        $this->assertContains(
+        $this->assertStringContainsString('<ul class="pagination">', $html);
+        $this->assertStringContainsString('<li class="page-item disabled">', $html);
+        $this->assertStringContainsString('<a class="page-link"><< Previous</a>', $html);
+        $this->assertStringContainsString('<li class="page-item active">', $html);
+        $this->assertStringContainsString('<a class="page-link">1</a>', $html);
+        $this->assertStringContainsString('<li class="page-item">', $html);
+        $this->assertStringContainsString(
             '<a class="page-link" href="index.php?p=2">2</a>',
-            $ArrayOrganize->generateTable($css, $pager)
+            $html
         );
 
         $ArrayOrganize = new ArrayOrganize([
@@ -267,22 +268,22 @@ class ArrayOrganizeTest extends TestCase
 
         $result = $ArrayOrganize->addFunction("name", "substr", [0, -2]);
         $this->assertEquals(true, $result);
-        $this->assertContains('<tr><td>2</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+        $this->assertStringContainsString('<tr><td>2</td><td>example</td></tr>', $ArrayOrganize->generateTable());
 
         $ArrayOrganize->addFunction("name", "substr", [0, -2]);
-        $this->assertContains('<tr><td>1</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+        $this->assertStringContainsString('<tr><td>1</td><td>example</td></tr>', $ArrayOrganize->generateTable());
 
         $ArrayOrganize->addFunction("name", "substr", [0, -2]);
-        $this->assertContains('<tr><td>3</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+        $this->assertStringContainsString('<tr><td>3</td><td>example</td></tr>', $ArrayOrganize->generateTable());
 
         $ArrayOrganize->addFunction("name", "substr", [0, -2]);
-        $this->assertContains('<tr><td>6</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+        $this->assertStringContainsString('<tr><td>6</td><td>example</td></tr>', $ArrayOrganize->generateTable());
 
         $ArrayOrganize->addFunction("name", "substr", [0, -2]);
-        $this->assertContains('<tr><td>5</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+        $this->assertStringContainsString('<tr><td>5</td><td>example</td></tr>', $ArrayOrganize->generateTable());
 
         $ArrayOrganize->addFunction("name", "substr", [0, -2]);
-        $this->assertContains('<tr><td>4</td><td>example</td></tr>', $ArrayOrganize->generateTable());
+        $this->assertStringContainsString('<tr><td>4</td><td>example</td></tr>', $ArrayOrganize->generateTable());
     }
 
     /**
@@ -307,7 +308,7 @@ class ArrayOrganizeTest extends TestCase
         $result = $ArrayOrganize->addTotal("val", "<strong>Total :</strong> ");
         $this->assertEquals(true, $result);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<tr><td></td><td><strong>Total :</strong> 54</td></tr></tbody>',
             $ArrayOrganize->generateTable()
         );
@@ -349,12 +350,13 @@ class ArrayOrganizeTest extends TestCase
             "balise" => "li/a"
         ];
 
-        $this->assertContains('<ul class="list-group">', $ArrayOrganize->generateList($cssClass));
-        $this->assertContains('<li class="list-group-item">', $ArrayOrganize->generateList($cssClass));
-        $this->assertContains('<a class="">Test list 1</a>', $ArrayOrganize->generateList($cssClass));
-        $this->assertContains(
+        $html = $ArrayOrganize->generateList($cssClass);
+        $this->assertStringContainsString('<ul class="list-group">', $html);
+        $this->assertStringContainsString('<li class="list-group-item">', $html);
+        $this->assertStringContainsString('<a class="">Test list 1</a>', $html);
+        $this->assertStringContainsString(
             '<a class="" href="http://ddg.gg/" target="_blank">Test list 2</a>',
-            $ArrayOrganize->generateList($cssClass)
+            $html
         );
 
         $ArrayOrganize = new ArrayOrganize([
