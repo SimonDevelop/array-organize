@@ -146,8 +146,8 @@ class ArrayOrganize
             $html .= "<ul class=\"".$classUl."\">";
 
             if ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
-                $urlPrevious = str_replace("{}", $this->page-1, $this->url);
-                $urlNext = str_replace("{}", $this->page+1, $this->url);
+                $urlPrevious = str_replace("{}", strval($this->page-1), $this->url);
+                $urlNext = str_replace("{}", strval($this->page+1), $this->url);
             } else {
                 $urlPrevious = "#";
                 $urlNext = "#";
@@ -182,7 +182,9 @@ class ArrayOrganize
                               </li>";
                 } else {
                     $html .= "<li class=\"".$classLi."\">
-                                <a class=\"".$classA."\" href=\"".str_replace("{}", $i, $this->url)."\">".$i."</a>
+                                <a class=\"".$classA."\" href=\""
+                                    .str_replace("{}", strval($i), $this->url)."\">".$i.
+                                "</a>
                               </li>";
                 }
             }
@@ -212,7 +214,7 @@ class ArrayOrganize
             $new_array = [];
             $sortable_array = [];
 
-            if (count($this->data) > 0) {
+            if (count($this->data) != 0) {
                 foreach ($this->data as $k => $v) {
                     if (is_array($v)) {
                         if (isset($v[$on])) {
@@ -259,32 +261,28 @@ class ArrayOrganize
     {
         if (!empty($this->data)) {
             if ($action === "skip" || $action === "keep") {
-                if (is_array($columns)) {
-                    if (count($this->data) > 0) {
-                        foreach ($this->data as $k => $v) {
-                            if (is_array($v)) {
-                                foreach ($v as $k2 => $v2) {
-                                    if (in_array($k2, $columns)) {
-                                        if ($action == "skip") {
-                                            unset($this->data[$k][$k2]);
-                                        }
-                                    } else {
-                                        if ($action == "keep") {
-                                            unset($this->data[$k][$k2]);
-                                        }
+                if (count($this->data) != 0) {
+                    foreach ($this->data as $k => $v) {
+                        if (is_array($v)) {
+                            foreach ($v as $k2 => $v2) {
+                                if (in_array($k2, $columns)) {
+                                    if ($action == "skip") {
+                                        unset($this->data[$k][$k2]);
+                                    }
+                                } else {
+                                    if ($action == "keep") {
+                                        unset($this->data[$k][$k2]);
                                     }
                                 }
-                            } else {
-                                throw new \Exception('Unable to filter: Bad array format');
                             }
+                        } else {
+                            throw new \Exception('Unable to filter: Bad array format');
                         }
                     }
-
-                    $this->data = array_merge([], $this->data);
-                    return true;
-                } else {
-                    throw new \Exception('Unable to filter: Bad format columns param');
                 }
+
+                $this->data = array_merge([], $this->data);
+                return true;
             } else {
                 throw new \Exception('Unable to filter: Bad action param');
             }
@@ -300,117 +298,113 @@ class ArrayOrganize
     public function dataFilter(array $columns = [])
     {
         if (!empty($this->data)) {
-            if (is_array($columns)) {
-                if (count($this->data) > 0) {
-                    foreach ($this->data as $k => $v) {
-                        if (is_array($v)) {
-                            foreach ($v as $k2 => $v2) {
-                                foreach ($columns as $key => $val) {
-                                    if (!is_array($val)) {
-                                        if (substr($val, -1) == "%" && substr($val, 0, 1) == "%") {
-                                            $explode = explode("%", $val);
-                                            if (isset($columns[$k2]) && !preg_match("#".$explode[1]."#", $v2)) {
-                                                unset($this->data[$k]);
-                                            }
-                                        } elseif (substr($key, -3) === "[<]") {
-                                            $explode = explode("[<]", $key);
-                                            $kv = $explode[0];
-                                            if (preg_match(
-                                                "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
-                                                $val
-                                            )) {
-                                                $val = new \DateTime($val);
-                                                $val2 = new \DateTime($this->data[$k][$kv]);
-                                                if (isset($this->data[$k]) && $val2 >= $val) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            } else {
-                                                if (isset($this->data[$k])
-                                                && floatval($this->data[$k][$kv]) >= floatval($val)) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            }
-                                        } elseif (substr($key, -4) === "[<=]") {
-                                            $explode = explode("[<=]", $key);
-                                            $kv = $explode[0];
-                                            if (preg_match(
-                                                "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
-                                                $val
-                                            )) {
-                                                $val = new \DateTime($val);
-                                                $val2 = new \DateTime($this->data[$k][$kv]);
-                                                if (isset($this->data[$k]) && $val2 > $val) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            } else {
-                                                if (isset($this->data[$k])
-                                                && floatval($this->data[$k][$kv]) > floatval($val)) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            }
-                                        } elseif (substr($key, -3) === "[>]") {
-                                            $explode = explode("[>]", $key);
-                                            $kv = $explode[0];
-                                            if (preg_match(
-                                                "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
-                                                $val
-                                            )) {
-                                                $val = new \DateTime($val);
-                                                $val2 = new \DateTime($this->data[$k][$kv]);
-                                                if (isset($this->data[$k]) && $val2 <= $val) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            } else {
-                                                if (isset($this->data[$k])
-                                                && floatval($this->data[$k][$kv]) <= floatval($val)) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            }
-                                        } elseif (substr($key, -4) === "[>=]") {
-                                            $explode = explode("[>=]", $key);
-                                            $kv = $explode[0];
-                                            if (preg_match(
-                                                "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
-                                                $val
-                                            )) {
-                                                $val = new \DateTime($val);
-                                                $val2 = new \DateTime($this->data[$k][$kv]);
-                                                if (isset($this->data[$k]) && $val2 < $val) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            } else {
-                                                if (isset($this->data[$k])
-                                                && floatval($this->data[$k][$kv]) < floatval($val)) {
-                                                    unset($this->data[$k]);
-                                                }
-                                            }
-                                        } elseif (substr($key, -4) === "[!=]") {
-                                            $explode = explode("[!=]", $key);
-                                            $kv = $explode[0];
-                                            if (isset($this->data[$k][$kv]) && $this->data[$k][$kv] == $columns[$key]) {
+            if (count($this->data) != 0) {
+                foreach ($this->data as $k => $v) {
+                    if (is_array($v)) {
+                        foreach ($v as $k2 => $v2) {
+                            foreach ($columns as $key => $val) {
+                                if (!is_array($val)) {
+                                    if (substr($val, -1) == "%" && substr($val, 0, 1) == "%") {
+                                        $explode = explode("%", $val);
+                                        if (isset($columns[$k2]) && !preg_match("#".$explode[1]."#", $v2)) {
+                                            unset($this->data[$k]);
+                                        }
+                                    } elseif (substr($key, -3) === "[<]") {
+                                        $explode = explode("[<]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 >= $val) {
                                                 unset($this->data[$k]);
                                             }
                                         } else {
-                                            if (isset($columns[$k2]) && $v2 != $columns[$k2]) {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) >= floatval($val)) {
                                                 unset($this->data[$k]);
                                             }
                                         }
+                                    } elseif (substr($key, -4) === "[<=]") {
+                                        $explode = explode("[<=]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 > $val) {
+                                                unset($this->data[$k]);
+                                            }
+                                        } else {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) > floatval($val)) {
+                                                unset($this->data[$k]);
+                                            }
+                                        }
+                                    } elseif (substr($key, -3) === "[>]") {
+                                        $explode = explode("[>]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 <= $val) {
+                                                unset($this->data[$k]);
+                                            }
+                                        } else {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) <= floatval($val)) {
+                                                unset($this->data[$k]);
+                                            }
+                                        }
+                                    } elseif (substr($key, -4) === "[>=]") {
+                                        $explode = explode("[>=]", $key);
+                                        $kv = $explode[0];
+                                        if (preg_match(
+                                            "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+                                            $val
+                                        )) {
+                                            $val = new \DateTime($val);
+                                            $val2 = new \DateTime($this->data[$k][$kv]);
+                                            if (isset($this->data[$k]) && $val2 < $val) {
+                                                unset($this->data[$k]);
+                                            }
+                                        } else {
+                                            if (isset($this->data[$k])
+                                            && floatval($this->data[$k][$kv]) < floatval($val)) {
+                                                unset($this->data[$k]);
+                                            }
+                                        }
+                                    } elseif (substr($key, -4) === "[!=]") {
+                                        $explode = explode("[!=]", $key);
+                                        $kv = $explode[0];
+                                        if (isset($this->data[$k][$kv]) && $this->data[$k][$kv] == $columns[$key]) {
+                                            unset($this->data[$k]);
+                                        }
                                     } else {
-                                        throw new \Exception('Unable to filter: Bad array format');
+                                        if (isset($columns[$k2]) && $v2 != $columns[$k2]) {
+                                            unset($this->data[$k]);
+                                        }
                                     }
+                                } else {
+                                    throw new \Exception('Unable to filter: Bad array format');
                                 }
                             }
-                        } else {
-                            throw new \Exception('Unable to filter: Bad array format');
                         }
+                    } else {
+                        throw new \Exception('Unable to filter: Bad array format');
                     }
                 }
-
-                $this->data = array_merge([], $this->data);
-                return true;
-            } else {
-                throw new \Exception('Unable to filter: Bad format columns param');
             }
+
+            $this->data = array_merge([], $this->data);
+            return true;
         } else {
             return false;
         }
@@ -810,7 +804,7 @@ class ArrayOrganize
      */
     public function getUrl()
     {
-        return str_replace("{}", $this->page, $this->url);
+        return str_replace("{}", strval($this->page), $this->url);
     }
 
     /**
@@ -821,7 +815,7 @@ class ArrayOrganize
     {
         if (is_string($url) && preg_match("#{}#", $url)) {
             $this->url = $url;
-            return str_replace("{}", $this->page, $this->url);
+            return str_replace("{}", strval($this->page), $this->url);
         } else {
             throw new \Exception('Unable to "setUrl": Argument must be an string and contain pattern "{}" for id page');
         }
