@@ -59,13 +59,13 @@ class ArrayOrganize
         if ($byPage >= 1) {
             $this->byPage = $byPage;
         } else {
-            throw new \Exception('Unable build: Argument $byPage must be an integer and greater than 0');
+            throw new \InvalidArgumentException('Unable build: Argument $byPage must be an integer and greater than 0');
         }
 
         if ($page >= 1) {
             $this->page = $page;
         } else {
-            throw new \Exception('Unable build: Argument $page must be an integer and greater than 0');
+            throw new \InvalidArgumentException('Unable build: Argument $page must be an integer and greater than 0');
         }
     }
 
@@ -148,12 +148,14 @@ class ArrayOrganize
             if (isset($pagination["url"]) && preg_match("#{}#", $pagination["url"]) == 1) {
                 $urlPrevious = str_replace("{}", strval($this->page-1), $pagination["url"]);
                 $urlNext = str_replace("{}", strval($this->page+1), $pagination["url"]);
-            } elseif ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
-                $urlPrevious = str_replace("{}", strval($this->page-1), $this->url);
-                $urlNext = str_replace("{}", strval($this->page+1), $this->url);
             } else {
-                $urlPrevious = "#";
-                $urlNext = "#";
+                if ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
+                    $urlPrevious = str_replace("{}", strval($this->page-1), $this->url);
+                    $urlNext = str_replace("{}", strval($this->page+1), $this->url);
+                } else {
+                    $urlPrevious = "#";
+                    $urlNext = "#";
+                }
             }
 
             if (isset($pagination["lang"]["previous"]) && isset($pagination["lang"]["next"])) {
@@ -227,7 +229,7 @@ class ArrayOrganize
                                 }
                             }
                         } else {
-                            throw new \Exception('Unable to sort: No "'.$on.'" columns found');
+                            throw new \InvalidArgumentException('Unable to sort: No "'.$on.'" columns found');
                         }
                     } else {
                         throw new \Exception('Unable to sort: Bad array format');
@@ -279,7 +281,7 @@ class ArrayOrganize
                                 }
                             }
                         } else {
-                            throw new \Exception('Unable to filter: Bad array format');
+                            throw new \InvalidArgumentException('Unable to filter: Bad array format');
                         }
                     }
                 }
@@ -287,7 +289,7 @@ class ArrayOrganize
                 $this->data = array_merge([], $this->data);
                 return true;
             } else {
-                throw new \Exception('Unable to filter: Bad action param');
+                throw new \InvalidArgumentException('Unable to filter: Bad action param');
             }
         } else {
             return false;
@@ -319,10 +321,12 @@ class ArrayOrganize
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($this->data[$k][$kv]);
-                                            if (isset($this->data[$k]) && $val2 >= $val) {
-                                                unset($this->data[$k]);
+                                            if (isset($this->data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($this->data[$k][$kv]);
+                                                if ($val2 < $val || $val2 == $val) {
+                                                    unset($this->data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($this->data[$k])
@@ -337,10 +341,12 @@ class ArrayOrganize
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($this->data[$k][$kv]);
-                                            if (isset($this->data[$k]) && $val2 > $val) {
-                                                unset($this->data[$k]);
+                                            if (isset($this->data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($this->data[$k][$kv]);
+                                                if ($val2 < $val) {
+                                                    unset($this->data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($this->data[$k])
@@ -355,10 +361,12 @@ class ArrayOrganize
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($this->data[$k][$kv]);
-                                            if (isset($this->data[$k]) && $val2 <= $val) {
-                                                unset($this->data[$k]);
+                                            if (isset($this->data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($this->data[$k][$kv]);
+                                                if ($val2 > $val || $val2 == $val) {
+                                                    unset($this->data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($this->data[$k])
@@ -373,10 +381,12 @@ class ArrayOrganize
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($this->data[$k][$kv]);
-                                            if (isset($this->data[$k]) && $val2 < $val) {
-                                                unset($this->data[$k]);
+                                            if (isset($this->data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($this->data[$k][$kv]);
+                                                if ($val2 > $val) {
+                                                    unset($this->data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($this->data[$k])
@@ -427,7 +437,7 @@ class ArrayOrganize
                     return false;
                 }
             } else {
-                throw new \Exception('Unable to filter: Bad format data for (addFunction)');
+                throw new \InvalidArgumentException('Unable to filter: Bad format data for (addFunction)');
             }
         }
         $this->functions[$column] = [
@@ -454,7 +464,7 @@ class ArrayOrganize
                     }
                 }
             } else {
-                throw new \Exception('Unable to filter: Bad format data for (addTotal)');
+                throw new \InvalidArgumentException('Unable to filter: Bad format data for (addTotal)');
             }
         }
         $this->totals[$column] = [
@@ -498,13 +508,8 @@ class ArrayOrganize
                 break;
             }
 
-            if ($this->byPage == null) {
-                $count = count($this->data);
-                $page = 0;
-            } else {
-                $count = $this->byPage;
-                $page = $this->page-1;
-            }
+            $count = $this->byPage;
+            $page = $this->page-1;
 
             $nb = 0;
             for ($i = (0+($page*$count)); $i < ($count+($page*$count)); $i++) {
@@ -776,7 +781,9 @@ class ArrayOrganize
             $this->byPage = $byPage;
             return $this->byPage;
         } else {
-            throw new \Exception('Unable to "setByPage": Argument must be an integer and greater than 0');
+            throw new \InvalidArgumentException(
+                'Unable to "setByPage": Argument must be an integer and greater than 0'
+            );
         }
     }
 
@@ -798,7 +805,7 @@ class ArrayOrganize
             $this->page = $page;
             return $this->page;
         } else {
-            throw new \Exception('Unable to "setPage": Argument must be an integer and greater than 0');
+            throw new \InvalidArgumentException('Unable to "setPage": Argument must be an integer and greater than 0');
         }
     }
 
@@ -820,7 +827,9 @@ class ArrayOrganize
             $this->url = $url;
             return str_replace("{}", strval($this->page), $this->url);
         } else {
-            throw new \Exception('Unable to "setUrl": Argument must be an string and contain pattern "{}" for id page');
+            throw new \InvalidArgumentException(
+                'Unable to "setUrl": Argument must be an string and contain pattern "{}" for id page'
+            );
         }
     }
 }

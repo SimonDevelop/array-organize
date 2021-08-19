@@ -39,7 +39,7 @@ class ArrayOrganizeFacade
                                 }
                             }
                         } else {
-                            throw new \Exception('Unable to sort: No "'.$on.'" columns found');
+                            throw new \InvalidArgumentException('Unable to sort: No "'.$on.'" columns found');
                         }
                     } else {
                         throw new \Exception('Unable to sort: Bad array format');
@@ -92,7 +92,7 @@ class ArrayOrganizeFacade
                                 }
                             }
                         } else {
-                            throw new \Exception('Unable to filter: Bad array format');
+                            throw new \InvalidArgumentException('Unable to filter: Bad array format');
                         }
                     }
                 }
@@ -100,7 +100,7 @@ class ArrayOrganizeFacade
                 $data = array_merge([], $data);
                 return $data;
             } else {
-                throw new \Exception('Unable to filter: Bad action param');
+                throw new \InvalidArgumentException('Unable to filter: Bad action param');
             }
         } else {
             return false;
@@ -133,10 +133,12 @@ class ArrayOrganizeFacade
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($data[$k][$kv]);
-                                            if (isset($data[$k]) && $val2 >= $val) {
-                                                unset($data[$k]);
+                                            if (isset($data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($data[$k][$kv]);
+                                                if ($val2 < $val || $val2 == $val) {
+                                                    unset($data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($data[$k])
@@ -151,10 +153,12 @@ class ArrayOrganizeFacade
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($data[$k][$kv]);
-                                            if (isset($data[$k]) && $val2 > $val) {
-                                                unset($data[$k]);
+                                            if (isset($data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($data[$k][$kv]);
+                                                if ($val2 < $val) {
+                                                    unset($data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($data[$k])
@@ -169,10 +173,12 @@ class ArrayOrganizeFacade
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($data[$k][$kv]);
-                                            if (isset($data[$k]) && $val2 <= $val) {
-                                                unset($data[$k]);
+                                            if (isset($data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($data[$k][$kv]);
+                                                if ($val2 > $val || $val2 == $val) {
+                                                    unset($data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($data[$k])
@@ -187,10 +193,12 @@ class ArrayOrganizeFacade
                                             "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
                                             $val
                                         )) {
-                                            $val = new \DateTime($val);
-                                            $val2 = new \DateTime($data[$k][$kv]);
-                                            if (isset($data[$k]) && $val2 < $val) {
-                                                unset($data[$k]);
+                                            if (isset($data[$k])) {
+                                                $val = new \DateTime($val);
+                                                $val2 = new \DateTime($data[$k][$kv]);
+                                                if ($val2 > $val) {
+                                                    unset($data[$k]);
+                                                }
                                             }
                                         } else {
                                             if (isset($data[$k])
