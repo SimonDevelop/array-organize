@@ -5,12 +5,20 @@ namespace SimonDevelop\Test;
 use \PHPUnit\Framework\TestCase;
 use \SimonDevelop\ArrayOrganize;
 
+/**
+ * @coversDefaultClass \SimonDevelop\ArrayOrganize
+ * @covers ::__construct
+ */
 class ArrayOrganizeTest extends TestCase
 {
     /**
      * Constructor test
+     * @covers ::getPage
+     * @covers ::getByPage
+     * @covers ::getData
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testInitConstructor()
+    public function testInitConstructor(): ArrayOrganize
     {
         $ArrayOrganize = new ArrayOrganize();
         $this->assertEquals(1, $ArrayOrganize->getPage());
@@ -21,8 +29,12 @@ class ArrayOrganizeTest extends TestCase
 
     /**
      * Constructor test with params
+     * @covers ::getPage
+     * @covers ::getByPage
+     * @covers ::getData
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testInitConstructorWithParam()
+    public function testInitConstructorWithParam(): void
     {
         $ArrayOrganize = new ArrayOrganize([], 10, 2);
         $this->assertEquals(2, $ArrayOrganize->getPage());
@@ -32,8 +44,11 @@ class ArrayOrganizeTest extends TestCase
 
     /**
      * DataSort function test
+     * @covers ::dataSort
+     * @covers ::getData
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testDataSort()
+    public function testDataSort(): void
     {
         $ArrayOrganize = new ArrayOrganize([
             ["id" => 2, "name" => "test4"],
@@ -58,8 +73,11 @@ class ArrayOrganizeTest extends TestCase
 
     /**
      * DataColumnFilter function test
+     * @covers ::dataColumnFilter
+     * @covers ::getData
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testDataColumnFilter()
+    public function testDataColumnFilter(): void
     {
         $ArrayOrganize = new ArrayOrganize([
             ["id" => 2, "name" => "test3"],
@@ -84,8 +102,11 @@ class ArrayOrganizeTest extends TestCase
 
     /**
      * DataFilter function test
+     * @covers ::dataFilter
+     * @covers ::getData
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testDataFilter()
+    public function testDataFilter(): void
     {
         // is
         $ArrayOrganize = new ArrayOrganize([
@@ -189,8 +210,10 @@ class ArrayOrganizeTest extends TestCase
 
     /**
      * GenerateTable function test
+     * @covers ::generateTable
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testGenerateTable()
+    public function testGenerateTable(): void
     {
         $datas = [
             ["id" => 2, "name" => "example 5"],
@@ -251,9 +274,67 @@ class ArrayOrganizeTest extends TestCase
     }
 
     /**
-     * AddFunction function test
+     * GeneratePagination function test
+     * @covers ::generatePagination
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testAddFunction()
+    public function testGeneratePagination(): void
+    {
+        $datas = [
+            ["id" => 2, "name" => "example 5"],
+            ["id" => 1, "name" => "example 5"],
+            ["id" => 3, "name" => "example 3"],
+            ["id" => 6, "name" => "example 5"],
+            ["id" => 5, "name" => "example 3"],
+            ["id" => 4, "name" => "example 6"]
+        ];
+
+        $ArrayOrganize = new ArrayOrganize($datas, 3, 1);
+
+        $pager = [
+            "position" => "bottom",
+            "lang" => [
+                "previous" => "<< Previous",
+                "next" => "Next >>"
+            ],
+            "cssClass" => [
+                "ul" => "pagination",
+                "li" => "page-item",
+                "a" => "page-link",
+                "disabled" => [
+                    "li" => "disabled"
+                ],
+                "active" => [
+                    "li" => "active"
+                ]
+            ],
+            "url" => "index.php?p={}"
+        ];
+
+        $html = $ArrayOrganize->generatePagination($pager);
+
+        $this->assertStringContainsString('<ul class="pagination">', $html);
+        $this->assertStringContainsString('<li class="page-item disabled">', $html);
+        $this->assertStringContainsString('<a class="page-link"><< Previous</a>', $html);
+        $this->assertStringContainsString('<li class="page-item active">', $html);
+        $this->assertStringContainsString('<a class="page-link">1</a>', $html);
+        $this->assertStringContainsString('<li class="page-item">', $html);
+        $this->assertStringContainsString(
+            '<a class="page-link">1</a>',
+            $html
+        );
+        $this->assertStringContainsString(
+            '<a class="page-link" href="#">2</a>',
+            $html
+        );
+    }
+
+    /**
+     * AddFunction function test
+     * @covers ::addFunction
+     * @uses \SimonDevelop\ArrayOrganize
+     */
+    public function testAddFunction(): void
     {
         $datas = [
             ["id" => 2, "name" => "example 5"],
@@ -288,8 +369,10 @@ class ArrayOrganizeTest extends TestCase
 
     /**
      * AddTotal function test
+     * @covers ::addTotal
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testAddTotal()
+    public function testAddTotal(): void
     {
         $datas = [
             ["id" => 2, "val" => 6],
@@ -316,8 +399,10 @@ class ArrayOrganizeTest extends TestCase
 
     /**
      * GenerateList function test
+     * @covers ::generateList
+     * @uses \SimonDevelop\ArrayOrganize
      */
-    public function testGenerateList()
+    public function testGenerateList(): void
     {
         $datas = [
             ["title" => "Test list 1"],
@@ -369,11 +454,20 @@ class ArrayOrganizeTest extends TestCase
     /**
      * Getters and Setters test
      * @depends testInitConstructor
+     * @covers ::setByPage
+     * @covers ::setPage
+     * @covers ::setUrl
+     * @covers ::setData
+     * @covers ::getByPage
+     * @covers ::getPage
+     * @covers ::getUrl
+     * @covers ::getData
      */
-    public function testGetterSetter($ArrayOrganize)
+    public function testGetterSetter($ArrayOrganize): void
     {
         $ArrayOrganize->setByPage(10);
         $ArrayOrganize->setPage(2);
+        $ArrayOrganize->setUrl("index.php?={}");
         $ArrayOrganize->setData(["test1", "test2"]);
 
         $byPage = $ArrayOrganize->getByPage();
@@ -383,7 +477,7 @@ class ArrayOrganizeTest extends TestCase
 
         $this->assertEquals(10, $byPage);
         $this->assertEquals(2, $page);
-        $this->assertEquals("#", $url);
+        $this->assertEquals("index.php?=2", $url);
         $this->assertEquals(["test1", "test2"], $data);
     }
 }
