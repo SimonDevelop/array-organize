@@ -56,13 +56,13 @@ class ArrayOrganize
     {
         $this->data = $data;
 
-        if (is_int($byPage) && $byPage >= 1) {
+        if ($byPage >= 1) {
             $this->byPage = $byPage;
         } else {
             throw new \Exception('Unable build: Argument $byPage must be an integer and greater than 0');
         }
 
-        if (is_int(intval($page)) && intval($page) >= 1) {
+        if ($page >= 1) {
             $this->page = $page;
         } else {
             throw new \Exception('Unable build: Argument $page must be an integer and greater than 0');
@@ -73,7 +73,7 @@ class ArrayOrganize
      * @param array $pagination params for construct pagination
      * @return string Return html pagination
      */
-    private function generatePagination(array $pagination)
+    public function generatePagination(array $pagination)
     {
         $html = "";
         if (isset($pagination["cssClass"]) && is_array($pagination["cssClass"])) {
@@ -145,7 +145,10 @@ class ArrayOrganize
         if ($this->byPage != null && $this->byPage < count($this->data)) {
             $html .= "<ul class=\"".$classUl."\">";
 
-            if ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
+            if (isset($pagination["url"]) && preg_match("#{}#", $pagination["url"]) == 1) {
+                $urlPrevious = str_replace("{}", strval($this->page-1), $pagination["url"]);
+                $urlNext = str_replace("{}", strval($this->page+1), $pagination["url"]);
+            } elseif ($this->url != "#" && preg_match("#{}#", $this->url) == 1) {
                 $urlPrevious = str_replace("{}", strval($this->page-1), $this->url);
                 $urlNext = str_replace("{}", strval($this->page+1), $this->url);
             } else {
@@ -813,7 +816,7 @@ class ArrayOrganize
      */
     public function setUrl(string $url)
     {
-        if (is_string($url) && preg_match("#{}#", $url)) {
+        if (preg_match("#{}#", $url)) {
             $this->url = $url;
             return str_replace("{}", strval($this->page), $this->url);
         } else {

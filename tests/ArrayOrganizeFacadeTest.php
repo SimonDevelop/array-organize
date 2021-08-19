@@ -5,10 +5,15 @@ namespace SimonDevelop\Test;
 use \PHPUnit\Framework\TestCase;
 use \SimonDevelop\ArrayOrganizeFacade;
 
+/**
+ * @coversDefaultClass \SimonDevelop\ArrayOrganizeFacade
+ */
 class ArrayOrganizeFacadeTest extends TestCase
 {
     /**
      * DataSort function test
+     * @covers ::dataSort
+     * @uses \SimonDevelop\ArrayOrganizeFacade
      */
     public function testDataSort()
     {
@@ -28,6 +33,8 @@ class ArrayOrganizeFacadeTest extends TestCase
 
     /**
      * DataColumnFilter function test
+     * @covers ::dataColumnFilter
+     * @uses \SimonDevelop\ArrayOrganizeFacade
      */
     public function testDataColumnFilter()
     {
@@ -47,6 +54,8 @@ class ArrayOrganizeFacadeTest extends TestCase
 
     /**
      * DataFilter function test
+     * @covers ::dataFilter
+     * @uses \SimonDevelop\ArrayOrganizeFacade
      */
     public function testDataFilter()
     {
