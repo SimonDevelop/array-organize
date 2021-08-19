@@ -1,4 +1,4 @@
-[![version](https://img.shields.io/badge/Version-0.2.0-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.2.0)
+[![version](https://img.shields.io/badge/Version-0.2.1-brightgreen.svg)](https://github.com/SimonDevelop/array-organize/releases/tag/0.2.1)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.3-8892BF.svg)](https://php.net/)
 [![Github Actions PHP](https://github.com/SimonDevelop/array-organize/workflows/PHP/badge.svg)](https://github.com/SimonDevelop/array-organize/actions)
 [![codecov](https://codecov.io/gh/SimonDevelop/array-organize/branch/master/graph/badge.svg?token=D30AKR07T2)](https://codecov.io/gh/SimonDevelop/array-organize)
